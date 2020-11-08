@@ -4,11 +4,16 @@ typedef Room = {
 }
 
 class Rooms {
-    static function getRoom (name:String):Null<Room> {
+    static public function getRoom (name:String):Null<Room> {
         switch (name) {
             case 'ty-room': 
                 return {
                     path: AssetPaths.ty_room__tmx,
+                    type: 'room'
+                };
+            case 'ty-living-room':
+                return {
+                    path: AssetPaths.ty_living_room__tmx,
                     type: 'room'
                 };
             default: return null;

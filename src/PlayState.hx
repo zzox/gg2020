@@ -16,6 +16,8 @@ import flixel.system.scaleModes.PixelPerfectScaleMode;
 class PlayState extends FlxState {
 	static inline final GAME_WIDTH = 240;
 	static inline final GAME_HEIGHT = 135;
+	static inline final EXIT_DISTANCE = 4;
+	static inline final FROM_EXIT_DISTANCE = 8;
 
 	var _collisionLayer:FlxTilemap;
 
@@ -39,8 +41,10 @@ class PlayState extends FlxState {
 
 		bgColor = 0xff151515;
 
-		
-		createMap();
+		var room:Rooms.Room = Rooms.getRoom(GlobalState.instance.currentRoom);
+		createMap(room);
+
+		// TODO: get which direction player should be facing
 		var start:FlxPoint = findStartingPoint();
 
 		_player = new Player(start.x, start.y, this);
@@ -53,18 +57,18 @@ class PlayState extends FlxState {
 	override public function update(elapsed:Float) {		
 		super.update(elapsed);
 
-		checkHardExits();
+		checkExits();
 		// checkSoftExits();
 
 		FlxG.collide(_collisionLayer, _player);
 	}
 
-	function createMap () {
+	function createMap (room) {
 		var yUpOffset = -4;
-		var xItemsOffset = -4;
+		var xItemsOffset = 4;
 		var yItemsOffset = 4;
 
-		var map = new TiledMap(AssetPaths.ty_room__tmx);
+		var map = new TiledMap(room.path);
 
 		var _groundBackLayer = new FlxTilemap();
 		_groundBackLayer.loadMapFromArray(cast(map.getLayer('ground-back'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
@@ -87,12 +91,20 @@ class PlayState extends FlxState {
 			add(_itemsLayer);
 		}
 		
-		if (map.getLayer('items-angled') != null) {
-			var _itemsLayerAngled = new FlxTilemap();
-			_itemsLayerAngled.loadMapFromArray(cast(map.getLayer('items-angled'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
+		if (map.getLayer('items-angled-left') != null) {
+			var _itemsLayerAngledLeft = new FlxTilemap();
+			_itemsLayerAngledLeft.loadMapFromArray(cast(map.getLayer('items-angled-left'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
 				map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
-				.setPosition(0 + xItemsOffset, 0 + yItemsOffset + yUpOffset);
-			add(_itemsLayerAngled);
+				.setPosition(0 + -xItemsOffset, 0 + yItemsOffset + yUpOffset);
+			add(_itemsLayerAngledLeft);
+		}
+
+		if (map.getLayer('items-angled-right') != null) {
+			var _itemsLayerAngledRight = new FlxTilemap();
+			_itemsLayerAngledRight.loadMapFromArray(cast(map.getLayer('items-angled-right'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
+				map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+				.setPosition(0 + xItemsOffset + 1, 0 + yItemsOffset + yUpOffset);
+			add(_itemsLayerAngledRight);
 		}
 
 		_collisionLayer = new FlxTilemap();
@@ -124,17 +136,15 @@ class PlayState extends FlxState {
 		_blueFilter.scrollFactor.set(0, 0);
 	}
 
-	function checkHardExits () {
+	function checkExits () {
 		for (point in _hardExits) {
-			if (Math.abs(point.x - _player.x) < 8 && Math.abs(point.y - _player.y) < 8) {
+			if (Math.abs(point.x - _player.x) < EXIT_DISTANCE && Math.abs(point.y - _player.y) < EXIT_DISTANCE) {
 				changeRoom(point);
 			}
 		}
-	}
-	
-	function checkSoftExits () {
+
 		for (point in _softExits) {
-			if (point.name != 'start' && FlxG.keys.pressed.UP && Math.abs(point.x - _player.x) < 8 && Math.abs(point.y - _player.y) < 8) {
+			if (point.name != 'start' && FlxG.keys.pressed.UP && Math.abs(point.x - _player.x) < 4 && Math.abs(point.y - _player.y) < 4) {
 				changeRoom(point);
 			}
 		}
@@ -153,16 +163,15 @@ class PlayState extends FlxState {
 		trace(roomName);
 		if (roomName == null) {
 			roomName = 'start';
-			trace(roomName);
 		}
 
 		for (h in _hardExits) {
 			if (h.name == roomName) {
 				var xDiff = 0;
 				if (h.properties.get('from') == 'left') {
-					xDiff = 8;
+					xDiff = FROM_EXIT_DISTANCE;
 				} else if (h.properties.get('from') == 'right') {
-					xDiff = -8;
+					xDiff = -FROM_EXIT_DISTANCE;
 				}
 
 				return new FlxPoint(h.x + xDiff, h.y);
