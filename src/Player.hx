@@ -33,7 +33,8 @@ class Player extends FlxSprite {
 	static inline final HIT_JUMP_MIN_Y = 8;
 	static inline final HIT_JUMP_MAX_Y = 16; // shouldn't be needed
 	static inline final GRAVITY = 800;
-	static inline final JUMP_START_TIME = 0.16;
+    static inline final JUMP_START_TIME = 0.16;
+    static inline final AIR_DOWN_ANIM_LIMIT = 50;
 
 	static inline final PRE_DASH = 0.1;
 	static inline final DASH_TIME = 0.33;
@@ -48,9 +49,9 @@ class Player extends FlxSprite {
 	var hurtFlashIndex:Int = 0;
 
 	var airTime:Float;
-	static inline final BUFFER_AIR_TIME = 0.1;
+	static inline final AIR_TIME_BUFFER = 0.1;
 
-	public function new(x:Int, y:Int, scene:PlayState) {
+	public function new(x:Float, y:Float, scene:PlayState) {
 		super(x, y);
 
 		loadGraphic(AssetPaths.ty__png, true, 16, 24);
@@ -155,7 +156,7 @@ class Player extends FlxSprite {
 		var dashPressed = FlxG.keys.anyJustPressed([X, TAB]);
 
 		if (!reallyHurt) {
-			if (jumpPressed && (touchingFloor || (airTime < BUFFER_AIR_TIME && !jumping))/* && dashingTime < 0*/) {
+			if (jumpPressed && (touchingFloor || (airTime < AIR_TIME_BUFFER && !jumping))/* && dashingTime < 0*/) {
 				jumping = true;
 				jumpTime = JUMP_START_TIME;
 			}
@@ -271,7 +272,7 @@ class Player extends FlxSprite {
 				animation.play('stand');
 			}
 		} else {
-			if (velocity.y > 20) {
+			if (velocity.y > AIR_DOWN_ANIM_LIMIT) {
 				animation.play('in-air-down');
 			} else {
 				animation.play('in-air-up');
