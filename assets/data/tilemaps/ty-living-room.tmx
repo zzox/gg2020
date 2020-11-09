@@ -81,8 +81,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="10" name="cinematics">
-  <object id="7" name="leave-house" x="21" y="83">
+ <objectgroup id="10" name="hard-cinematics">
+  <object id="7" name="leave-house" x="18" y="83">
    <point/>
   </object>
  </objectgroup>

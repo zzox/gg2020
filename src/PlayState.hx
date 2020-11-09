@@ -1,6 +1,6 @@
 package;
 
-import flixel.math.FlxPoint;
+import Cinematics;
 import GlobalState;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -9,9 +9,10 @@ import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.addons.editors.tiled.TiledTileLayer;
+import flixel.math.FlxPoint;
+import flixel.system.scaleModes.PixelPerfectScaleMode;
 import flixel.tile.FlxTilemap;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
-import flixel.system.scaleModes.PixelPerfectScaleMode;
 
 class PlayState extends FlxState {
 	static inline final GAME_WIDTH = 240;
@@ -23,10 +24,14 @@ class PlayState extends FlxState {
 
 	var _hardExits:Array<TiledObject>;
 	var _softExits:Array<TiledObject>;
+	var _hardCinematics:Array<TiledObject>;
 
 	var _blueFilter:FlxSprite;
 
 	var _player:Player;
+
+	var cinematicIndex:Int;
+	public var _cinematic:Null<Array<Cinematic>>;
 
 	override public function create() {
 		super.create();
@@ -52,13 +57,17 @@ class PlayState extends FlxState {
 		add(_collisionLayer);
 		add(_player);
 		add(_blueFilter);
+
+		cinematicIndex = 0;
+		_cinematic = null;
 	}
 
 	override public function update(elapsed:Float) {		
 		super.update(elapsed);
 
-		checkExits();
-		// checkSoftExits();
+		if (_cinematic == null) {
+			checkExits();
+		}
 
 		FlxG.collide(_collisionLayer, _player);
 	}
@@ -115,20 +124,34 @@ class PlayState extends FlxState {
 
 
 		_hardExits = [];
-		var s = cast(map.getLayer('hard-exits'), TiledObjectLayer).objects;
-		s.map(item -> {
-			item.y += yUpOffset + yItemsOffset;
-			item.x += xItemsOffset;
-			_hardExits.push(item);
-		});
+		if (map.getLayer('hard-exits') != null) {
+			var s = cast(map.getLayer('hard-exits'), TiledObjectLayer).objects;
+			s.map(item -> {
+				item.y += yUpOffset + yItemsOffset;
+				item.x += xItemsOffset;
+				_hardExits.push(item);
+			});
+		}
 
 		_softExits = [];
-		var s = cast(map.getLayer('soft-exits'), TiledObjectLayer).objects;
-		s.map(item -> {
-			item.y += yUpOffset + yItemsOffset;
-			item.x += xItemsOffset;
-			_softExits.push(item);
-		});
+		if (map.getLayer('soft-exits') != null) {
+			var s = cast(map.getLayer('soft-exits'), TiledObjectLayer).objects;
+			s.map(item -> {
+				item.y += yUpOffset + yItemsOffset;
+				item.x += xItemsOffset;
+				_softExits.push(item);
+			});
+		}
+
+		_hardCinematics = [];
+		if (map.getLayer('hard-cinematics') != null) {
+			var s = cast(map.getLayer('hard-cinematics'), TiledObjectLayer).objects;
+			s.map(item -> {
+				item.y += yUpOffset + yItemsOffset;
+				item.x += xItemsOffset;
+				_hardCinematics.push(item);
+			});
+		}
 
 		_blueFilter = new FlxSprite();
 		_blueFilter.makeGraphic(GAME_WIDTH, GAME_HEIGHT, 0xff00177d);
@@ -144,10 +167,18 @@ class PlayState extends FlxState {
 		}
 
 		for (point in _softExits) {
-			if (point.name != 'start' && FlxG.keys.pressed.UP && Math.abs(point.x - _player.x) < 4 && Math.abs(point.y - _player.y) < 4) {
+			if (point.name != 'start' && FlxG.keys.justPressed.UP && Math.abs(point.x - _player.x) < EXIT_DISTANCE && Math.abs(point.y - _player.y) < EXIT_DISTANCE) {
 				changeRoom(point);
 			}
 		}
+
+		for (point in _hardCinematics) {
+			if (Math.abs(point.x - _player.x) < EXIT_DISTANCE && Math.abs(point.y - _player.y) < EXIT_DISTANCE) {
+				launchCinematic(point);
+			}
+		}
+
+		// soft cinematics
 	}
 
 	function changeRoom (o:TiledObject) {
@@ -157,10 +188,43 @@ class PlayState extends FlxState {
 		FlxG.switchState(new PlayState());
 	}
 
+	function launchCinematic (o:TiledObject) {
+		_cinematic = Cinematics.getCinematic(o.name);
+		doCinematic();
+	}
+
+	function doCinematic () {
+		var toIndex = 0;
+		var cin = _cinematic[cinematicIndex];
+
+		switch (cin.type) {
+			case 'callback':
+				toIndex = cin.callback();
+			default: null;
+		}
+
+		trace(toIndex);
+
+		if (toIndex == 0) {
+			cinematicIndex++;
+		} else {
+			cinematicIndex = toIndex;
+			doCinematic();
+		}
+	}
+
+	function endCinematic () {
+		cinematicIndex = 0;
+		_cinematic = null;
+	}
+
+	function openDialog (text:String) {
+
+	}
+
 	function findStartingPoint ():FlxPoint {
 		var roomName:Null<String> = GlobalState.instance.lastRoom;
 
-		trace(roomName);
 		if (roomName == null) {
 			roomName = 'start';
 		}

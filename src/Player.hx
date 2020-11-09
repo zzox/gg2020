@@ -126,7 +126,7 @@ class Player extends FlxSprite {
 			vel = vel * 2 / 3;
 		}
 
-		if ((dashingTime > 0 && touchingFloor) || reallyHurt) {
+		if ((dashingTime > 0 && touchingFloor) || reallyHurt || _scene._cinematic != null) {
 			vel = 0;
 		}
 
@@ -153,7 +153,13 @@ class Player extends FlxSprite {
 		dashingTime -= elapsed;
 
 		var jumpPressed = FlxG.keys.anyJustPressed([Z, SPACE]);
-		var dashPressed = FlxG.keys.anyJustPressed([X, TAB]);
+        var dashPressed = FlxG.keys.anyJustPressed([X, TAB]);
+
+        // WARN: best way to do this?
+        if (_scene._cinematic != null) {
+            jumpPressed = false;
+            dashPressed = false;
+        }
 
 		if (!reallyHurt) {
 			if (jumpPressed && (touchingFloor || (airTime < AIR_TIME_BUFFER && !jumping))/* && dashingTime < 0*/) {
