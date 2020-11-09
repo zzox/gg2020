@@ -1,3 +1,4 @@
+import flixel.FlxG;
 import flash.geom.Rectangle;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.graphics.frames.FlxBitmapFont;
@@ -8,22 +9,14 @@ import openfl.Assets;
 
 class Dialog extends FlxGroup {
     public var open:Bool;
-    // public var onTop:Bool;
-    // public var justOpened:Bool;
-    // public var highlighted:Int = 0;
-    // public var items:Array<MenuItem>;
     var onComplete:Function;
-    var bg:FlxUI9SliceSprite;
-    // var selector:FlxSprite;
-    // var columns:Int;
 
-    var _textLine1:FlxBitmapText;
-    var _textLine2:FlxBitmapText;
+    var bg:FlxUI9SliceSprite;
+    var _textLine:FlxBitmapText;
 
     var textTime:Float;
-    var stepTime:Int;
+    var stepTime:Float;
     var textIndex:Int;
-    var textLine:Int;
     var text:String;
     var halted:Bool;
 
@@ -37,67 +30,83 @@ class Dialog extends FlxGroup {
         
         this.onComplete = onComplete;
         
-        bg = new FlxUI9SliceSprite(0, 0, _graphic, new Rectangle(0, 0, 240, 48), _slice);
+        bg = new FlxUI9SliceSprite(0, 0, _graphic, new Rectangle(0, 0, 240, 20), _slice);
+        bg.scrollFactor.set(0, 0);
 
         var textBytes = Assets.getText(AssetPaths.miniset__fnt);
         var XMLData = Xml.parse(textBytes);
         var fontAngelCode = FlxBitmapFont.fromAngelCode(AssetPaths.miniset__png, XMLData);
 
-        _textLine1 = new FlxBitmapText(fontAngelCode);
-        _textLine1.color = TEXT_COLOR;
-        _textLine1.setPosition(10, 10);
+        _textLine = new FlxBitmapText(fontAngelCode);
+        _textLine.letterSpacing = -1;
+        _textLine.color = TEXT_COLOR;
+        _textLine.setPosition(6, 5);
+        _textLine.scrollFactor.set(0, 0);
 
-        _textLine2 = new FlxBitmapText(fontAngelCode);
-        _textLine2.color = TEXT_COLOR;
-        _textLine2.setPosition(10, 24);
-
-        stepTime = 100;
+        stepTime = 0.1;
         textTime = 0;
         textIndex = 0;
-        textLine = 1;
         halted = false;
-        visible = false;
 
         this.text = text;
-        open = false;
+        open = true;
+
+        add(bg);
+        add(_textLine);
     }
 
     override public function update (elapsed:Float) {
-        trace('isupdating');
+        if (!open) {
+            return;
+        }
+
         if (!halted) {
-            textTime += elapsed;
+            if (FlxG.keys.anyJustPressed([X, Z, SPACE])) {
+                fill();
+            } else {   
+                textTime += elapsed;
 
-            if (textTime > stepTime) {
-                textTime -= stepTime;
+                if (textTime > stepTime) {
+                    textTime -= stepTime;
 
-                addLetter();
+                    addLetter();
+                }
+            }
+        } else {
+            if (FlxG.keys.anyJustPressed([X, Z, SPACE])) {
+                end();
             }
         }
     }
 
     function addLetter() {
-        // chheck if is a space.
-
-
-        // add letter to text line
-        textIndex++;
+        // skip spaces
+        if (text.charAt(textIndex) == ' ') {
+            _textLine.text += ' ';
+            textIndex++;
+        }
 
         if (textIndex > text.length) {
-            // halt
+            halted = true;
+        } else {
+            _textLine.text += text.charAt(textIndex);
         }
+
+        textIndex++;
     }
 
     function fill () {
-        // while not halted, add letter.
+        _textLine.text = text;
+        halted = true;
     }
 
     function start () {
-        // other stuff
+        halted = false;
         visible = true;
     }
 
     function end () {
-        // other stuff
+        onComplete();
         visible = false;
     }
 }

@@ -33,6 +33,8 @@ class PlayState extends FlxState {
 	var cinematicIndex:Int;
 	public var _cinematic:Null<Array<Cinematic>>;
 
+	var _dialog:Null<Dialog>;
+
 	override public function create() {
 		super.create();
 
@@ -60,6 +62,8 @@ class PlayState extends FlxState {
 
 		cinematicIndex = 0;
 		_cinematic = null;
+
+		_dialog = null;
 	}
 
 	override public function update(elapsed:Float) {		
@@ -127,8 +131,7 @@ class PlayState extends FlxState {
 		if (map.getLayer('hard-exits') != null) {
 			var s = cast(map.getLayer('hard-exits'), TiledObjectLayer).objects;
 			s.map(item -> {
-				item.y += yUpOffset + yItemsOffset;
-				item.x += xItemsOffset;
+				item.y += yUpOffset;
 				_hardExits.push(item);
 			});
 		}
@@ -137,8 +140,7 @@ class PlayState extends FlxState {
 		if (map.getLayer('soft-exits') != null) {
 			var s = cast(map.getLayer('soft-exits'), TiledObjectLayer).objects;
 			s.map(item -> {
-				item.y += yUpOffset + yItemsOffset;
-				item.x += xItemsOffset;
+				item.y += yUpOffset;
 				_softExits.push(item);
 			});
 		}
@@ -147,8 +149,7 @@ class PlayState extends FlxState {
 		if (map.getLayer('hard-cinematics') != null) {
 			var s = cast(map.getLayer('hard-cinematics'), TiledObjectLayer).objects;
 			s.map(item -> {
-				item.y += yUpOffset + yItemsOffset;
-				item.x += xItemsOffset;
+				item.y += yUpOffset;
 				_hardCinematics.push(item);
 			});
 		}
@@ -162,44 +163,53 @@ class PlayState extends FlxState {
 	function checkExits () {
 		for (point in _hardExits) {
 			if (Math.abs(point.x - _player.x) < EXIT_DISTANCE && Math.abs(point.y - _player.y) < EXIT_DISTANCE) {
-				changeRoom(point);
+				changeRoom(point.name);
 			}
 		}
 
 		for (point in _softExits) {
 			if (point.name != 'start' && FlxG.keys.justPressed.UP && Math.abs(point.x - _player.x) < EXIT_DISTANCE && Math.abs(point.y - _player.y) < EXIT_DISTANCE) {
-				changeRoom(point);
+				changeRoom(point.name);
 			}
 		}
 
 		for (point in _hardCinematics) {
 			if (Math.abs(point.x - _player.x) < EXIT_DISTANCE && Math.abs(point.y - _player.y) < EXIT_DISTANCE) {
-				launchCinematic(point);
+				launchCinematic(point.name);
 			}
 		}
 
 		// soft cinematics
 	}
 
-	function changeRoom (o:TiledObject) {
-		trace(o.name);
+	function changeRoom (name:String) {
 		GlobalState.instance.lastRoom = GlobalState.instance.currentRoom;
-		GlobalState.instance.currentRoom = o.name;
+		GlobalState.instance.currentRoom = name;
 		FlxG.switchState(new PlayState());
 	}
 
-	function launchCinematic (o:TiledObject) {
-		_cinematic = Cinematics.getCinematic(o.name);
+	function launchCinematic (name:String) {
+		_cinematic = Cinematics.getCinematic(name);
 		doCinematic();
 	}
 
 	function doCinematic () {
 		var toIndex = 0;
+		if (cinematicIndex == _cinematic.length) {
+			endCinematic();
+			return;
+		}
+
 		var cin = _cinematic[cinematicIndex];
 
 		switch (cin.type) {
 			case 'callback':
 				toIndex = cin.callback();
+			case 'text':
+				openDialog(cin.text);
+			case 'room-change':
+				changeRoom(cin.roomName);
+				return;
 			default: null;
 		}
 
@@ -219,7 +229,16 @@ class PlayState extends FlxState {
 	}
 
 	function openDialog (text:String) {
+		_dialog = new Dialog(onCompleteDialog, text);
+		add(_dialog);
+	}
 
+	function onCompleteDialog () {
+		// ATTN: is this necessary?
+		remove(_dialog);
+		_dialog.destroy();
+		_dialog = null;
+		doCinematic();
 	}
 
 	function findStartingPoint ():FlxPoint {

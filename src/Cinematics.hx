@@ -29,7 +29,10 @@ class Cinematics {
                 }
             }, {
                 type: 'text',
-                text: 'What are you doing? You should be in bed.'
+                text: 'What are you doing?'
+            }, {
+                type: 'text',
+                text: 'You should be in bed.'
             }, {
                 type: 'room-change',
                 roomName: 'ty-room'

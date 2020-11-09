@@ -82,12 +82,12 @@
 </data>
  </layer>
  <objectgroup id="10" name="hard-cinematics">
-  <object id="7" name="leave-house" x="18" y="83">
+  <object id="7" name="leave-house" x="16" y="83">
    <point/>
   </object>
  </objectgroup>
  <objectgroup id="5" name="hard-exits">
-  <object id="1" name="ty-room" x="206" y="83">
+  <object id="1" name="ty-room" x="214" y="83">
    <properties>
     <property name="from" value="right"/>
    </properties>

@@ -69,7 +69,7 @@
 </data>
  </layer>
  <objectgroup id="5" name="hard-exits">
-  <object id="1" name="ty-living-room" x="50" y="83">
+  <object id="1" name="ty-living-room" x="48" y="83">
    <properties>
     <property name="from" value="left"/>
    </properties>
