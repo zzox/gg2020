@@ -62,7 +62,9 @@ class Player extends FlxSprite {
 		animation.add('run', [1, 1, 0, 2, 2, 0], 9);
 		animation.add('in-air-down', [2, 3], 8);
 		animation.add('in-air-up', [4, 5], 8);
-		animation.add('breathe', [0, 0, 7], 8);
+		animation.add('breathe', [0, 0, 6], 8);
+		animation.add('pre-dash', [7]);
+		animation.add('dash', [4, 5, 5], 16);
 
 		maxVelocity.set(100, 150);
 
@@ -162,7 +164,7 @@ class Player extends FlxSprite {
         }
 
 		if (!reallyHurt) {
-			if (jumpPressed && (touchingFloor || (airTime < AIR_TIME_BUFFER && !jumping))/* && dashingTime < 0*/) {
+			if (jumpPressed && (touchingFloor || (airTime < AIR_TIME_BUFFER && !jumping)) && dashingTime < 0) {
 				jumping = true;
 				jumpTime = JUMP_START_TIME;
 			}
@@ -265,7 +267,7 @@ class Player extends FlxSprite {
 			if (dashingTime < DASH_TIME - PRE_DASH) {
 				animation.play('dash');
 			} else {
-				animation.play('setup');
+				animation.play('pre-dash');
 			}
 
 			return;

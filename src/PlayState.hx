@@ -1,5 +1,3 @@
-package;
-
 import Cinematics;
 import GlobalState;
 import flixel.FlxSprite;
@@ -28,7 +26,8 @@ class PlayState extends FlxState {
 
 	var _blueFilter:FlxSprite;
 
-	var _player:Player;
+	public var _player:Player;
+	var _npcs:Array<NPC>;
 
 	var cinematicIndex:Int;
 	public var _cinematic:Null<Array<Cinematic>>;
@@ -151,6 +150,17 @@ class PlayState extends FlxState {
 			s.map(item -> {
 				item.y += yUpOffset;
 				_hardCinematics.push(item);
+			});
+		}
+
+		_npcs = [];
+		if (map.getLayer('npcs') != null) {
+			var s = cast(map.getLayer('npcs'), TiledObjectLayer).objects;
+			s.map(item -> {
+				var npcData:NPCs.NPCData = NPCs.getNPC(item.name);
+				var npc = new NPC(item.x, item.y, this, item.name, npcData.graphic);
+				_npcs.push(npc);
+				add(npc);
 			});
 		}
 
