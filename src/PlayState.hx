@@ -7,6 +7,7 @@ import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.addons.editors.tiled.TiledTileLayer;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.system.scaleModes.PixelPerfectScaleMode;
 import flixel.tile.FlxTilemap;
@@ -28,6 +29,8 @@ class PlayState extends FlxState {
 
 	public var _player:Player;
 	var _npcs:Array<NPC>;
+
+	var _thoughtBubbles:FlxTypedGroup<FlxSprite>;
 
 	var cinematicIndex:Int;
 	public var _cinematic:Null<Array<Cinematic>>;
@@ -154,15 +157,21 @@ class PlayState extends FlxState {
 		}
 
 		_npcs = [];
+		_thoughtBubbles = new FlxTypedGroup<FlxSprite>();
 		if (map.getLayer('npcs') != null) {
 			var s = cast(map.getLayer('npcs'), TiledObjectLayer).objects;
 			s.map(item -> {
 				var npcData:NPCs.NPCData = NPCs.getNPC(item.name);
-				var npc = new NPC(item.x, item.y, this, item.name, npcData.graphic);
+				var npc = new NPC(item.x, item.y, this, item.name, npcData.graphic, npcData.bubbles);
 				_npcs.push(npc);
 				add(npc);
+				add(npc._bubbles);
+				add(npc._thoughtBubbleBackground);
+				_thoughtBubbles.add(npc._thoughtBubble);
+				// add thought bubbles to group to check player overlap
 			});
 		}
+		add(_thoughtBubbles);
 
 		_blueFilter = new FlxSprite();
 		_blueFilter.makeGraphic(GAME_WIDTH, GAME_HEIGHT, 0xff00177d);
