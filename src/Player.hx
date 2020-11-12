@@ -22,6 +22,7 @@ class Player extends FlxSprite {
 
 	public var deadTime:Float;
 
+	var canDash:Bool;
 	var hasDashed:Bool;
 	public var dashingTime:Float;
 
@@ -51,20 +52,20 @@ class Player extends FlxSprite {
 	var airTime:Float;
 	static inline final AIR_TIME_BUFFER = 0.1;
 
-	public function new(x:Float, y:Float, scene:PlayState) {
+	public function new(x:Float, y:Float, scene:Dynamic, canDash:Bool) {
 		super(x, y);
 
 		loadGraphic(AssetPaths.ty__png, true, 16, 24);
 		offset.set(4, 7);
-		setSize(11, 13);
+		setSize(8, 13);
 
 		animation.add('stand', [0]);
 		animation.add('run', [1, 1, 0, 2, 2, 0], 9);
 		animation.add('in-air-down', [2, 3], 8);
 		animation.add('in-air-up', [4, 5], 8);
 		animation.add('breathe', [0, 0, 6], 8);
-		animation.add('pre-dash', [7]);
-		animation.add('dash', [4, 5, 5], 16);
+		animation.add('pre-dash', [9]);
+		animation.add('dash', [6, 7, 7], 16);
 
 		maxVelocity.set(100, 150);
 
@@ -84,6 +85,7 @@ class Player extends FlxSprite {
 		deadTime = 0.0;
 
 		_scene = scene;
+		this.canDash = canDash;
 
 		addDrag();
 	}
@@ -178,7 +180,7 @@ class Player extends FlxSprite {
 				}
 			}
 
-			if (dashPressed && dashingTime < 0 && !hasDashed && hurtTime <= 0.0) {
+			if (dashPressed && dashingTime < 0 && !hasDashed && hurtTime <= 0.0 && canDash) {
 				dashingTime = DASH_TIME;
 				hasDashed = true;
 			}

@@ -3,7 +3,7 @@ import flixel.FlxSprite;
 
 // new class to attach a name to the sprite
 class ThoughtBubble extends FlxSprite {
-    var name:String;
+    public var name:String;
     public function new (x, y, name) {
         super(x, y);
         this.name = name;
@@ -16,7 +16,7 @@ class NPC extends FlxSprite {
     var _scene:PlayState;
 
     public var _bubbles:FlxSprite;
-    public var _thoughtBubble:FlxSprite;
+    public var _thoughtBubble:ThoughtBubble;
     public var _thoughtBubbleBackground:FlxSprite;
 
     public function new (x:Float, y:Float, scene:PlayState, name:String, graphic:String, bubbles:Array<NPCs.Bubble>) {
@@ -41,7 +41,7 @@ class NPC extends FlxSprite {
                 _thoughtBubble = new ThoughtBubble(x + 24, y - 20, bubble.world);
                 _thoughtBubble.loadGraphic(AssetPaths.thought_cloud__png, true, 16, 16);
 
-                _thoughtBubbleBackground = new FlxSprite(x + 24, y - 16);
+                _thoughtBubbleBackground = new FlxSprite(x + 24, y - 20);
                 _thoughtBubbleBackground.loadGraphic(bubble.background, true, 16, 16);
             } else {
                 _bubbles = new FlxSprite(x + 24, y);

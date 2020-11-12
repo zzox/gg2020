@@ -1,5 +1,7 @@
 import Cinematics;
 import GlobalState;
+import ThoughtState;
+import NPC.ThoughtBubble;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxG;
@@ -30,7 +32,7 @@ class PlayState extends FlxState {
 	public var _player:Player;
 	var _npcs:Array<NPC>;
 
-	var _thoughtBubbles:FlxTypedGroup<FlxSprite>;
+	var _thoughtBubbles:FlxTypedGroup<NPC.ThoughtBubble>;
 
 	var cinematicIndex:Int;
 	public var _cinematic:Null<Array<Cinematic>>;
@@ -56,7 +58,7 @@ class PlayState extends FlxState {
 		// TODO: get which direction player should be facing
 		var start:FlxPoint = findStartingPoint();
 
-		_player = new Player(start.x, start.y, this);
+		_player = new Player(start.x, start.y, this, false);
 
 		add(_collisionLayer);
 		add(_player);
@@ -76,6 +78,7 @@ class PlayState extends FlxState {
 		}
 
 		FlxG.collide(_collisionLayer, _player);
+		FlxG.overlap(_thoughtBubbles, _player, overlapThoughtBubbles);
 	}
 
 	function createMap (room) {
@@ -157,7 +160,7 @@ class PlayState extends FlxState {
 		}
 
 		_npcs = [];
-		_thoughtBubbles = new FlxTypedGroup<FlxSprite>();
+		_thoughtBubbles = new FlxTypedGroup<ThoughtBubble>();
 		if (map.getLayer('npcs') != null) {
 			var s = cast(map.getLayer('npcs'), TiledObjectLayer).objects;
 			s.map(item -> {
@@ -199,6 +202,40 @@ class PlayState extends FlxState {
 		}
 
 		// soft cinematics
+	}
+
+	function findStartingPoint ():FlxPoint {
+		var roomName:Null<String> = GlobalState.instance.lastRoom;
+
+		if (roomName == null) {
+			roomName = 'start';
+		}
+
+		for (h in _hardExits) {
+			if (h.name == roomName) {
+				var xDiff = 0;
+				if (h.properties.get('from') == 'left') {
+					xDiff = FROM_EXIT_DISTANCE;
+				} else if (h.properties.get('from') == 'right') {
+					xDiff = -FROM_EXIT_DISTANCE;
+				}
+
+				return new FlxPoint(h.x + xDiff, h.y);
+			}
+		}
+
+		for (s in _softExits) {
+			if (s.name == roomName) {
+				return new FlxPoint(s.x, s.y);
+			}
+		}
+
+		return new FlxPoint(0, 0);
+	}
+
+	function overlapThoughtBubbles (bubble:NPC.ThoughtBubble, _:Player) {
+		GlobalState.instance.currentWorld = bubble.name;
+		FlxG.switchState(new ThoughtState());
 	}
 
 	function changeRoom (name:String) {
@@ -258,34 +295,5 @@ class PlayState extends FlxState {
 		_dialog.destroy();
 		_dialog = null;
 		doCinematic();
-	}
-
-	function findStartingPoint ():FlxPoint {
-		var roomName:Null<String> = GlobalState.instance.lastRoom;
-
-		if (roomName == null) {
-			roomName = 'start';
-		}
-
-		for (h in _hardExits) {
-			if (h.name == roomName) {
-				var xDiff = 0;
-				if (h.properties.get('from') == 'left') {
-					xDiff = FROM_EXIT_DISTANCE;
-				} else if (h.properties.get('from') == 'right') {
-					xDiff = -FROM_EXIT_DISTANCE;
-				}
-
-				return new FlxPoint(h.x + xDiff, h.y);
-			}
-		}
-
-		for (s in _softExits) {
-			if (s.name == roomName) {
-				return new FlxPoint(s.x, s.y);
-			}
-		}
-
-		return new FlxPoint(0, 0);
 	}
 }
