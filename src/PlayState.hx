@@ -230,7 +230,7 @@ class PlayState extends FlxState {
 	function findStartingPoint ():FlxPoint {
 		if (GlobalState.instance.fromWorld) {
 			var currentWorld = GlobalState.instance.currentWorld;
-			trace(currentWorld);
+
 			for (bubble in _thoughtBubbles) {
 				if (bubble.name == currentWorld) {
 					if (GlobalState.instance.wonWorld) {
@@ -289,7 +289,6 @@ class PlayState extends FlxState {
 
 	function changeRoom (name:String) {
 		worldStatus = true;
-		trace(name);
 		FlxTween.tween(_filter, { alpha: 1 }, 0.5, { onComplete: (_:FlxTween) -> {
 			GlobalState.instance.lastRoom = GlobalState.instance.currentRoom;
 			GlobalState.instance.currentRoom = name;
@@ -324,8 +323,6 @@ class PlayState extends FlxState {
 			default: null;
 		}
 
-		trace(toIndex);
-
 		if (toIndex == 0) {
 			cinematicIndex++;
 		} else {
@@ -339,12 +336,9 @@ class PlayState extends FlxState {
 	}
 
 	function doActions (actions:Array<Cinematics.Action>, time:Float) {
-		trace('doing an action');
-		
 		for (action in actions) {
 			var target = getNPC(action.target);
 
-			trace(target);
 			switch (action.type) {
 				case 'move-x': 
 					FlxTween.tween(target, { x: action.to.x }, time);
