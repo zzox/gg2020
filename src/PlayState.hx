@@ -181,13 +181,15 @@ class PlayState extends FlxState {
 			var s = cast(map.getLayer('npcs'), TiledObjectLayer).objects;
 			s.map(item -> {
 				var npcData:NPCs.NPCData = NPCs.getNPC(item.name);
-				var npc = new NPC(item.x, item.y, this, item.name, npcData.graphic, npcData.bubbles);
-				_npcs.push(npc);
-				add(npc);
-				add(npc._bubbles);
-				add(npc._thoughtBubbleBackground);
-				_thoughtBubbles.add(npc._thoughtBubble);
-				// add thought bubbles to group to check player overlap
+				if (npcData.qualify()) {
+					var npc = new NPC(item.x, item.y, this, item.name, npcData.graphic, npcData.bubbles);
+					_npcs.push(npc);
+					add(npc);
+					add(npc._bubbles);
+					add(npc._thoughtBubbleBackground);
+					_thoughtBubbles.add(npc._thoughtBubble);
+				}
+				return null; // needs a return statement to work??
 			});
 		}
 		add(_thoughtBubbles);
