@@ -233,7 +233,7 @@ class PlayState extends FlxState {
 			for (bubble in _thoughtBubbles) {
 				if (bubble.name == currentWorld) {
 					if (GlobalState.instance.wonWorld) {
-						// pop bubbbles
+						popBubbles(bubble.fromNPC);
 						GlobalState.instance.completedWorlds.push(currentWorld);
 						launchCinematic('$currentWorld-win');
 					}
@@ -351,5 +351,14 @@ class PlayState extends FlxState {
 		_dialog = null;
 		doCinematic();
 		justSubmitted = true;
+	}
+
+	function popBubbles(name:String) {
+		_npcs.map(npc -> {
+			if (npc.name == name) {
+				npc.popBubbles();
+			}
+			return npc;
+		});
 	}
 }
