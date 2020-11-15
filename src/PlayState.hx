@@ -1,3 +1,4 @@
+import flixel.tweens.FlxTween;
 import Cinematics;
 import GlobalState;
 import ThoughtState;
@@ -34,10 +35,15 @@ class PlayState extends FlxState {
 
 	var _thoughtBubbles:FlxTypedGroup<NPC.ThoughtBubble>;
 
+	var _filter:FlxSprite;
+
 	var cinematicIndex:Int;
 	public var _cinematic:Null<Array<Cinematic>>;
 
 	var _dialog:Null<Dialog>;
+
+	var worldStatus:Null<Bool> = null;
+	public var justSubmitted:Bool = false;
 
 	override public function create() {
 		super.create();
@@ -52,6 +58,11 @@ class PlayState extends FlxState {
 
 		bgColor = 0xff151515;
 
+		cinematicIndex = 0;
+		_cinematic = null;
+
+		_dialog = null;
+
 		var room:Rooms.Room = Rooms.getRoom(GlobalState.instance.currentRoom);
 		createMap(room);
 
@@ -63,22 +74,27 @@ class PlayState extends FlxState {
 		add(_collisionLayer);
 		add(_player);
 		add(_blueFilter);
+		add(_filter);
 
-		cinematicIndex = 0;
-		_cinematic = null;
-
-		_dialog = null;
+		worldStatus = false;
+		FlxTween.tween(_filter, { alpha: 0 }, 0.5, { onComplete: (_:FlxTween) -> {
+			worldStatus = null;
+		}});
 	}
 
 	override public function update(elapsed:Float) {		
 		super.update(elapsed);
 
-		if (_cinematic == null) {
+		if (_cinematic == null && worldStatus == null) {
 			checkExits();
+			FlxG.overlap(_thoughtBubbles, _player, overlapThoughtBubbles);
 		}
 
 		FlxG.collide(_collisionLayer, _player);
-		FlxG.overlap(_thoughtBubbles, _player, overlapThoughtBubbles);
+
+		if (justSubmitted) {
+			justSubmitted = false;
+		}
 	}
 
 	function createMap (room) {
@@ -180,6 +196,10 @@ class PlayState extends FlxState {
 		_blueFilter.makeGraphic(GAME_WIDTH, GAME_HEIGHT, 0xff00177d);
 		_blueFilter.alpha = 0.3;
 		_blueFilter.scrollFactor.set(0, 0);
+
+		_filter = new FlxSprite();
+		_filter.makeGraphic(GAME_WIDTH, GAME_HEIGHT, 0xff151515);
+		_filter.scrollFactor.set(0, 0);
 	}
 
 	function checkExits () {
@@ -205,6 +225,26 @@ class PlayState extends FlxState {
 	}
 
 	function findStartingPoint ():FlxPoint {
+		if (GlobalState.instance.fromWorld) {
+			var currentWorld = GlobalState.instance.currentWorld;
+			trace(currentWorld);
+			for (bubble in _thoughtBubbles) {
+				if (bubble.name == currentWorld) {
+					if (GlobalState.instance.wonWorld) {
+						// pop bubbbles
+						GlobalState.instance.completedWorlds.push(currentWorld);
+						launchCinematic('$currentWorld-win');
+					}
+
+					GlobalState.instance.currentWorld = null;
+					GlobalState.instance.fromWorld = false;
+					GlobalState.instance.wonWorld = false;
+
+					return new FlxPoint(bubble.x, bubble.y);
+				}
+			}
+		}
+
 		var roomName:Null<String> = GlobalState.instance.lastRoom;
 
 		if (roomName == null) {
@@ -233,15 +273,24 @@ class PlayState extends FlxState {
 		return new FlxPoint(0, 0);
 	}
 
-	function overlapThoughtBubbles (bubble:NPC.ThoughtBubble, _:Player) {
-		GlobalState.instance.currentWorld = bubble.name;
-		FlxG.switchState(new ThoughtState());
+	function overlapThoughtBubbles (bubble:NPC.ThoughtBubble, player:Player) {
+		if (player.hasHitFloor) {
+			_player.frozen = true;
+			FlxTween.tween(_filter, { alpha: 1 }, 0.5, { onComplete: (_:FlxTween) -> {
+				GlobalState.instance.currentWorld = bubble.name;
+				FlxG.switchState(new ThoughtState());
+			}});
+		}
 	}
 
 	function changeRoom (name:String) {
-		GlobalState.instance.lastRoom = GlobalState.instance.currentRoom;
-		GlobalState.instance.currentRoom = name;
-		FlxG.switchState(new PlayState());
+		worldStatus = true;
+		trace(name);
+		FlxTween.tween(_filter, { alpha: 1 }, 0.5, { onComplete: (_:FlxTween) -> {
+			GlobalState.instance.lastRoom = GlobalState.instance.currentRoom;
+			GlobalState.instance.currentRoom = name;
+			FlxG.switchState(new PlayState());
+		}});
 	}
 
 	function launchCinematic (name:String) {
@@ -277,6 +326,10 @@ class PlayState extends FlxState {
 			cinematicIndex = toIndex;
 			doCinematic();
 		}
+
+		if (cin.type == 'callback' && toIndex == 0) {
+			doCinematic();
+		}
 	}
 
 	function endCinematic () {
@@ -290,10 +343,11 @@ class PlayState extends FlxState {
 	}
 
 	function onCompleteDialog () {
-		// ATTN: is this necessary?
+		// ATTN: is all this necessary?
 		remove(_dialog);
 		_dialog.destroy();
 		_dialog = null;
 		doCinematic();
+		justSubmitted = true;
 	}
 }

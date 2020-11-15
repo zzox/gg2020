@@ -22,14 +22,14 @@ class Cinematics {
                 type: 'callback',
                 callback: () -> {
                     if (GlobalState.instance.momIsSleeping) {
-                        return 3;
+                        return 4;
                     } else {
                         return 1;
                     }
                 }
             }, {
                 type: 'text',
-                text: 'What are you doing?'
+                text: 'What are you doing? It\'s way too late.'
             }, {
                 type: 'text',
                 text: 'You should be in bed.'
@@ -39,6 +39,28 @@ class Cinematics {
             }, {
                 type: 'room-change',
                 roomName: 'hometown'
+            }];
+            case 'mom-thought-win': return [{
+                type: 'text',
+                text: 'I\'m going to sleep.'
+            }, {
+                type: 'text',
+                text: 'You should really be in bed.'
+            }, {
+                type: 'text',
+                text: '... ...'
+            }, {
+                type: 'text',
+                text: 'I trust you.'
+            }, {
+                type: 'text',
+                text: 'play tweens here'
+            }, {
+                type: 'callback',
+                callback: () -> {
+                    GlobalState.instance.momIsSleeping = true;
+                    return 0;
+                }
             }];
             default: return null;
         }

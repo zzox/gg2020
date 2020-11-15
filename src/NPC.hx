@@ -15,9 +15,9 @@ class NPC extends FlxSprite {
     var follow:Bool;
     var _scene:PlayState;
 
-    public var _bubbles:FlxSprite;
-    public var _thoughtBubble:ThoughtBubble;
-    public var _thoughtBubbleBackground:FlxSprite;
+    public var _bubbles:Null<FlxSprite>;
+    public var _thoughtBubble:Null<ThoughtBubble>;
+    public var _thoughtBubbleBackground:Null<FlxSprite>;
 
     public function new (x:Float, y:Float, scene:PlayState, name:String, graphic:String, bubbles:Array<NPCs.Bubble>) {
         super(x, y);
@@ -34,36 +34,43 @@ class NPC extends FlxSprite {
         follow = true;
 
         for (bubble in bubbles) {
-            if (bubble.dir == 'right') {
-                _bubbles = new FlxSprite(x + 8, y - 12);
-                _bubbles.loadGraphic(AssetPaths.thought_bubbles__png, true, 16, 16);
+            if (!GlobalState.instance.completedWorlds.contains(bubble.world)) {
+                if (bubble.dir == 'right') {
+                    _bubbles = new FlxSprite(x + 8, y - 12);
+                    _bubbles.loadGraphic(AssetPaths.thought_bubbles__png, true, 16, 16);
 
-                _thoughtBubble = new ThoughtBubble(x + 24, y - 20, bubble.world);
-                _thoughtBubble.loadGraphic(AssetPaths.thought_cloud__png, true, 16, 16);
+                    _thoughtBubble = new ThoughtBubble(x + 24, y - 20, bubble.world);
+                    _thoughtBubble.loadGraphic(AssetPaths.thought_cloud__png, true, 16, 16);
 
-                _thoughtBubbleBackground = new FlxSprite(x + 24, y - 20);
-                _thoughtBubbleBackground.loadGraphic(bubble.background, true, 16, 16);
-            } else {
-                _bubbles = new FlxSprite(x + 24, y);
-                _bubbles.loadGraphic(AssetPaths.thought_bubbles__png, true, 16, 16);
-                _bubbles.flipX = true;
+                    _thoughtBubbleBackground = new FlxSprite(x + 24, y - 20);
+                    _thoughtBubbleBackground.loadGraphic(bubble.background, true, 16, 16);
+                } else {
+                    _bubbles = new FlxSprite(x + 24, y);
+                    _bubbles.loadGraphic(AssetPaths.thought_bubbles__png, true, 16, 16);
+                    _bubbles.flipX = true;
+                }
             }
         }
 
-        _bubbles.animation.add('idle', [0, 1, 2, 3], 4);
-        _bubbles.animation.play('idle');
+        if (_bubbles != null) {
+            _bubbles.animation.add('idle', [0, 1, 2, 3], 4);
+            _bubbles.animation.play('idle');
+        }
 
-        _thoughtBubble.animation.add('idle', [0, 1, 2], 4);
-        _thoughtBubble.animation.play('idle');
+        if (_thoughtBubble != null) {
+            _thoughtBubble.animation.add('idle', [0, 1, 2], 4);
+            _thoughtBubble.animation.play('idle');
+        }
 
-        _thoughtBubbleBackground.animation.add('idle', [0, 1, 2], 4);
-        _thoughtBubbleBackground.animation.play('idle');
+        if (_thoughtBubbleBackground != null) {
+            _thoughtBubbleBackground.animation.add('idle', [0, 1, 2], 4);
+            _thoughtBubbleBackground.animation.play('idle');
+        }
 
         animation.add('stand', [0]);
         animation.add('breathe', [0, 0, 0, 1, 2, 2, 1], 8);
 
         animation.play('breathe');
-
     }
 
     override function update (elapsed:Float) {

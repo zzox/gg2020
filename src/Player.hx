@@ -22,11 +22,13 @@ class Player extends FlxSprite {
 
 	public var deadTime:Float;
 
-	var canDash:Bool;
+	var inThoughts:Bool;
 	var hasDashed:Bool;
 	public var dashingTime:Float;
+	public var hasHitFloor:Bool;
+	public var frozen:Bool;
 
-	var _scene:PlayState;
+	var _scene:Dynamic;
 
 	static inline final JUMP_VELOCITY = 120;
 	static inline final RUN_ACCELERATION = 1500;
@@ -52,7 +54,7 @@ class Player extends FlxSprite {
 	var airTime:Float;
 	static inline final AIR_TIME_BUFFER = 0.1;
 
-	public function new(x:Float, y:Float, scene:Dynamic, canDash:Bool) {
+	public function new(x:Float, y:Float, scene:Dynamic, inThoughts:Bool) {
 		super(x, y);
 
 		loadGraphic(AssetPaths.ty__png, true, 16, 24);
@@ -66,6 +68,7 @@ class Player extends FlxSprite {
 		animation.add('breathe', [0, 0, 6], 8);
 		animation.add('pre-dash', [9]);
 		animation.add('dash', [6, 7, 7], 16);
+		animation.add('frozen', [4]);
 
 		maxVelocity.set(100, 150);
 
@@ -80,17 +83,29 @@ class Player extends FlxSprite {
 		hurting = false;
 		jumping = false;
 		hasDashed = false;
+		hasHitFloor = false;
+		frozen = false;
 		jumpTime = 0.0;
 		dashingTime = 0.0;
 		deadTime = 0.0;
 
 		_scene = scene;
-		this.canDash = canDash;
+		this.inThoughts = inThoughts;
 
 		addDrag();
 	}
 
 	override public function update (elapsed:Float) {
+		if (frozen) {
+			velocity.set(0, 0);
+			acceleration.set(0, 0);
+			color = 0xffffff;
+			animation.play('frozen');
+			super.update(elapsed);
+
+			return;
+		}
+
 		if (deadTime > 0) {
 			deadTime -= elapsed;
 			velocity.set(0, 0);
@@ -100,6 +115,20 @@ class Player extends FlxSprite {
 			super.update(elapsed);
 
 			return;
+		}
+
+		var touchingFloor = isTouching(FlxObject.DOWN);
+		var vel = handleInputs(elapsed);
+
+		if (_scene.worldStatus != null) {
+			handleAnimation(touchingFloor);
+			acceleration.set(0, GRAVITY);
+			super.update(elapsed);
+			return;
+		}
+
+		if (!hasHitFloor && isTouching(FlxObject.DOWN)) {
+			hasHitFloor = true;
 		}
 
 		var reallyHurt = hurtTime > HURT_TIME - REALLY_HURT;
@@ -122,9 +151,6 @@ class Player extends FlxSprite {
 				alpha = 1;
 			}
 		}
-
-		var touchingFloor = isTouching(FlxObject.DOWN);
-		var vel = handleInputs(elapsed);
 
 		if (!touchingFloor) {
 			vel = vel * 2 / 3;
@@ -166,7 +192,8 @@ class Player extends FlxSprite {
         }
 
 		if (!reallyHurt) {
-			if (jumpPressed && (touchingFloor || (airTime < AIR_TIME_BUFFER && !jumping)) && dashingTime < 0) {
+			if (jumpPressed && (touchingFloor || (airTime < AIR_TIME_BUFFER && !jumping))
+				&& dashingTime < 0 && !_scene.justSubmitted) {
 				jumping = true;
 				jumpTime = JUMP_START_TIME;
 			}
@@ -180,7 +207,7 @@ class Player extends FlxSprite {
 				}
 			}
 
-			if (dashPressed && dashingTime < 0 && !hasDashed && hurtTime <= 0.0 && canDash) {
+			if (dashPressed && dashingTime < 0 && !hasDashed && hurtTime <= 0.0 && inThoughts) {
 				dashingTime = DASH_TIME;
 				hasDashed = true;
 			}
