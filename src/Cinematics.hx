@@ -61,7 +61,7 @@ class Cinematics {
                 text: 'I trust you.'
             }, {
                 type: 'actions',
-                time: 1.2,
+                time: 1.0,
                 actions: [{
                     target: 'mom',
                     type: 'move-x',

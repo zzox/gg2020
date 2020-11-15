@@ -75,10 +75,10 @@ class NPC extends FlxSprite {
         }
 
         animation.add('stand', [0]);
-        animation.add('walk', [3, 3, 0, 4, 4, 0], 6);
+        animation.add('walk', [3, 3, 0, 4, 4, 0], 8);
         animation.add('breathe', [0, 0, 0, 1, 2, 2, 1], 8);
 
-        animation.play('breathe');
+        animation.play('stand');
     }
 
     override function update (elapsed:Float) {
@@ -89,6 +89,8 @@ class NPC extends FlxSprite {
                 flipX = false;
             }
         }
+
+        super.update(elapsed);
     }
 
     public function popBubbles () {
