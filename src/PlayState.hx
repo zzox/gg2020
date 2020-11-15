@@ -1,3 +1,4 @@
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
 import Cinematics;
 import GlobalState;
@@ -236,6 +237,7 @@ class PlayState extends FlxState {
 						popBubbles(bubble.fromNPC);
 						GlobalState.instance.completedWorlds.push(currentWorld);
 						launchCinematic('$currentWorld-win');
+						bubble.popped = true;
 					}
 
 					GlobalState.instance.currentWorld = null;
@@ -276,7 +278,7 @@ class PlayState extends FlxState {
 	}
 
 	function overlapThoughtBubbles (bubble:NPC.ThoughtBubble, player:Player) {
-		if (player.hasHitFloor) {
+		if (player.hasHitFloor && !bubble.popped) {
 			_player.frozen = true;
 			FlxTween.tween(_filter, { alpha: 1 }, 0.5, { onComplete: (_:FlxTween) -> {
 				GlobalState.instance.currentWorld = bubble.name;
@@ -317,6 +319,8 @@ class PlayState extends FlxState {
 			case 'room-change':
 				changeRoom(cin.roomName);
 				return;
+			case 'actions':
+				doActions(cin.actions, cin.time);
 			default: null;
 		}
 
@@ -332,6 +336,37 @@ class PlayState extends FlxState {
 		if (cin.type == 'callback' && toIndex == 0) {
 			doCinematic();
 		}
+	}
+
+	function doActions (actions:Array<Cinematics.Action>, time:Float) {
+		trace('doing an action');
+		
+		for (action in actions) {
+			var target = getNPC(action.target);
+
+			trace(target);
+			switch (action.type) {
+				case 'move-x': 
+					FlxTween.tween(target, { x: action.to.x }, time);
+				case 'anim':
+					target.animation.play(action.anim);
+				case 'visibility':
+					target.visible = action.visibility;
+			}
+		}
+
+		var timer = new FlxTimer();
+		timer.start(time, (_:FlxTimer) -> doCinematic());
+	}
+
+	function getNPC (name:String):Null<NPC> {
+		for (npc in _npcs) {
+			if (npc.name == name) {
+				return npc;
+			}
+		}
+
+		return null;
 	}
 
 	function endCinematic () {

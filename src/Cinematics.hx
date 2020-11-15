@@ -1,4 +1,3 @@
-import flixel.tweens.FlxTween;
 import haxe.Constraints.Function;
 
 typedef Cinematic = {
@@ -7,12 +6,20 @@ typedef Cinematic = {
     var ?callback:Function;
     var ?roomName:String;
     var ?actions:Array<Action>;
+    var ?time:Float;
 }
 
 typedef Action = {
     var target:String;
     var type:String;
-    var tween:FlxTween;
+    var ?to:OptPoint;
+    var ?anim:String;
+    var ?visibility:Bool;
+}
+
+typedef OptPoint = {
+    var ?x:Float;
+    var ?y:Float;
 }
 
 class Cinematics {
@@ -53,8 +60,25 @@ class Cinematics {
                 type: 'text',
                 text: 'I trust you.'
             }, {
-                type: 'text',
-                text: 'play tweens here'
+                type: 'actions',
+                time: 1.2,
+                actions: [{
+                    target: 'mom',
+                    type: 'move-x',
+                    to: { x: 114 }
+                }, {
+                    target: 'mom',
+                    type: 'anim',
+                    anim: 'walk'
+                }]
+            }, {
+                type: 'actions',
+                time: 0,
+                actions: [{
+                    target: 'mom',
+                    type: 'visibility',
+                    visibility: false
+                }]
             }, {
                 type: 'callback',
                 callback: () -> {
