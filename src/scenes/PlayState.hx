@@ -1,9 +1,16 @@
+package scenes;
+
+import actors.NPC;
+import actors.NPC.ThoughtBubble;
+import actors.Player;
+import data.Cinematics;
+import data.Cinematics.Action;
+import data.GlobalState;
+import data.NPCs;
+import data.Rooms;
+import data.Rooms.Room;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
-import Cinematics;
-import GlobalState;
-import ThoughtState;
-import NPC.ThoughtBubble;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxG;
@@ -16,6 +23,8 @@ import flixel.math.FlxPoint;
 import flixel.system.scaleModes.PixelPerfectScaleMode;
 import flixel.tile.FlxTilemap;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
+import objects.Dialog;
+import scenes.ThoughtState;
 
 class PlayState extends FlxState {
 	static inline final GAME_WIDTH = 240;
@@ -34,7 +43,7 @@ class PlayState extends FlxState {
 	public var _player:Player;
 	var _npcs:Array<NPC>;
 
-	var _thoughtBubbles:FlxTypedGroup<NPC.ThoughtBubble>;
+	var _thoughtBubbles:FlxTypedGroup<ThoughtBubble>;
 
 	var _filter:FlxSprite;
 
@@ -64,7 +73,7 @@ class PlayState extends FlxState {
 
 		_dialog = null;
 
-		var room:Rooms.Room = Rooms.getRoom(GlobalState.instance.currentRoom);
+		var room:Room = Rooms.getRoom(GlobalState.instance.currentRoom);
 		createMap(room);
 
 		// TODO: get which direction player should be facing
@@ -181,7 +190,7 @@ class PlayState extends FlxState {
 		if (map.getLayer('npcs') != null) {
 			var s = cast(map.getLayer('npcs'), TiledObjectLayer).objects;
 			s.map(item -> {
-				var npcData:NPCs.NPCData = NPCs.getNPC(item.name);
+				var npcData:NPCData = NPCs.getNPC(item.name);
 				if (npcData.qualify()) {
 					var npc = new NPC(item.x, item.y, this, item.name, npcData.graphic, npcData.bubbles);
 					_npcs.push(npc);
@@ -277,7 +286,7 @@ class PlayState extends FlxState {
 		return new FlxPoint(0, 0);
 	}
 
-	function overlapThoughtBubbles (bubble:NPC.ThoughtBubble, player:Player) {
+	function overlapThoughtBubbles (bubble:ThoughtBubble, player:Player) {
 		if (player.hasHitFloor && !bubble.popped) {
 			_player.frozen = true;
 			FlxTween.tween(_filter, { alpha: 1 }, 0.5, { onComplete: (_:FlxTween) -> {
@@ -335,7 +344,7 @@ class PlayState extends FlxState {
 		}
 	}
 
-	function doActions (actions:Array<Cinematics.Action>, time:Float) {
+	function doActions (actions:Array<Action>, time:Float) {
 		for (action in actions) {
 			var target = getNPC(action.target);
 

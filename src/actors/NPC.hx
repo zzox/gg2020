@@ -1,5 +1,9 @@
-import PlayState;
+package actors;
+
+import data.GlobalState;
+import data.NPCs.Bubble;
 import flixel.FlxSprite;
+import scenes.PlayState;
 
 // new class to attach a name to the sprite
 class ThoughtBubble extends FlxSprite {
@@ -22,7 +26,7 @@ class NPC extends FlxSprite {
     public var _thoughtBubble:Null<ThoughtBubble>;
     public var _thoughtBubbleBackground:Null<FlxSprite>;
 
-    public function new (x:Float, y:Float, scene:PlayState, name:String, graphic:String, bubbles:Array<NPCs.Bubble>) {
+    public function new (x:Float, y:Float, scene:PlayState, name:String, graphic:String, bubbles:Array<Bubble>) {
         super(x, y);
 
         loadGraphic(graphic, true, 16, 24);

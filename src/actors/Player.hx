@@ -1,4 +1,5 @@
-import flixel.util.FlxColor;
+package actors;
+
 import flixel.FlxObject;
 import flixel.FlxG;
 import flixel.FlxSprite;

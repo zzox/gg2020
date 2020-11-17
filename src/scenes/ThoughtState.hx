@@ -1,5 +1,10 @@
-import Cinematics.Cinematic;
-import ThoughtWorlds.ThoughtWorld;
+package scenes;
+
+import actors.Player;
+import data.Cinematics.Cinematic;
+import data.ThoughtWorlds;
+import data.ThoughtWorlds.ThoughtWorld;
+import data.GlobalState;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -12,8 +17,9 @@ import flixel.math.FlxPoint;
 import flixel.system.scaleModes.PixelPerfectScaleMode;
 import flixel.tile.FlxTilemap;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
-import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import objects.BackgroundShapes;
+import objects.HitItem;
 
 class ThoughtState extends FlxState {
 	static inline final GAME_WIDTH = 240;
@@ -42,7 +48,7 @@ class ThoughtState extends FlxState {
 
 		// camera.followLerp = 0.5;
 
-		var world:ThoughtWorlds.ThoughtWorld = ThoughtWorlds.getThoughtWorld(GlobalState.instance.currentWorld);
+		var world:ThoughtWorld = ThoughtWorlds.getThoughtWorld(GlobalState.instance.currentWorld);
 
 		var start:FlxPoint = createMap(world);
 

@@ -1,3 +1,5 @@
+package data;
+
 typedef ThoughtWorld = {
     var tilemap:String;
     var backgroundColor:Int;

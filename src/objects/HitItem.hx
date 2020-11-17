@@ -1,6 +1,9 @@
+package objects;
+
 import flixel.FlxSprite;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
+import scenes.ThoughtState;
 
 class HitItem extends FlxSprite {
     public var hit:Bool = false;
@@ -18,7 +21,6 @@ class HitItem extends FlxSprite {
         animation.add('explode', [5, 6, 7, 8], 8, false);
         animation.play('spin');
 
-        // lookup how to repeat, sinusoidally
         FlxTween.tween(this, {y: y + 2}, 1, { type: FlxTweenType.PINGPONG, ease: FlxEase.sineInOut });
 
         _scene = scene;

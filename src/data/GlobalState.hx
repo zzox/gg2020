@@ -1,3 +1,5 @@
+package data;
+
 class GlobalState {
     public static final instance:GlobalState = new GlobalState();
 

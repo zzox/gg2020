@@ -1,3 +1,5 @@
+package data;
+
 typedef Room = {
     var path:String;
     var type:String;
