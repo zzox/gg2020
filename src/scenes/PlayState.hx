@@ -37,6 +37,7 @@ class PlayState extends FlxState {
 	var _hardExits:Array<TiledObject>;
 	var _softExits:Array<TiledObject>;
 	var _hardCinematics:Array<TiledObject>;
+	var _xCinematics:Array<TiledObject>;
 
 	var _blueFilter:FlxSprite;
 
@@ -204,6 +205,15 @@ class PlayState extends FlxState {
 			});
 		}
 
+		_xCinematics = [];
+		if (map.getLayer('x-cinematics') != null) {
+			var s = cast(map.getLayer('x-cinematics'), TiledObjectLayer).objects;
+			s.map(item -> {
+				item.y += yUpOffset;
+				_xCinematics.push(item);
+			});
+		}
+
 		_npcs = [];
 		_thoughtBubbles = new FlxTypedGroup<ThoughtBubble>();
 		if (map.getLayer('npcs') != null) {
@@ -252,7 +262,14 @@ class PlayState extends FlxState {
 			}
 		}
 
-		// soft cinematics
+		for (point in _xCinematics) {
+			if (Math.abs(point.x - _player.x) < EXIT_DISTANCE && !GlobalState.instance.completedXCinematics.contains(point.name)) {
+				launchCinematic(point.name);
+				GlobalState.instance.completedXCinematics.push(point.name);
+			}
+		}
+
+		// soft cinematics?
 	}
 
 	function findStartingPoint (universalStart:Bool):FlxPoint {
@@ -372,6 +389,8 @@ class PlayState extends FlxState {
 					target.animation.play(action.anim);
 				case 'visibility':
 					target.visible = action.visibility;
+				case 'flip-x':
+					target.flipX = action.flipX;
 			}
 		}
 

@@ -4,6 +4,7 @@ typedef ThoughtWorld = {
     var tilemap:String;
     var backgroundColor:Int;
     var colors:Array<Int>;
+    // var itemPath:String;
 }
 
 class ThoughtWorlds {

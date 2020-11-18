@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="32" height="9" tilewidth="16" tileheight="16" infinite="0" nextlayerid="15" nextobjectid="12">
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="32" height="9" tilewidth="16" tileheight="16" infinite="0" nextlayerid="18" nextobjectid="16">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="192" columns="12">
   <image source="../../images/tilesets/tiles.png" width="192" height="256"/>
  </tileset>
@@ -68,15 +68,24 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="16" name="x-cinematics">
+  <object id="14" name="chris-intro" x="136" y="82">
+   <point/>
+  </object>
+ </objectgroup>
  <objectgroup id="10" name="hard-cinematics"/>
  <objectgroup id="14" name="soft-exits">
   <object id="10" name="start" x="35.2196" y="80.2601">
    <point/>
   </object>
-  <object id="11" x="0" y="-11.1755">
+ </objectgroup>
+ <objectgroup id="5" name="hard-exits"/>
+ <objectgroup id="11" name="npcs">
+  <object id="12" name="joy" x="344" y="76">
+   <point/>
+  </object>
+  <object id="13" name="chris" x="0" y="82">
    <point/>
   </object>
  </objectgroup>
- <objectgroup id="5" name="hard-exits"/>
- <objectgroup id="11" name="npcs"/>
 </map>

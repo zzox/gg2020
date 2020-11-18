@@ -4,6 +4,7 @@ class GlobalState {
     public static final instance:GlobalState = new GlobalState();
 
     public var completedWorlds:Array<String> = [];
+    public var completedXCinematics:Array<String> = [];
     public var currentRoom:String;
     public var lastRoom:Null<String>;
     public var currentWorld:Null<String>;
@@ -13,7 +14,7 @@ class GlobalState {
     public var momIsSleeping:Bool = false;
 
     private function new () {
-        currentRoom = 'ty-room';
+        currentRoom = 'hometown';
         lastRoom = null;
         currentWorld = null;
     }

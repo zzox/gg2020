@@ -17,6 +17,7 @@ typedef Action = {
     var ?to:OptPoint;
     var ?anim:String;
     var ?visibility:Bool;
+    var ?flipX:Bool;
 }
 
 typedef OptPoint = {
@@ -87,6 +88,52 @@ class Cinematics {
                     GlobalState.instance.momIsSleeping = true;
                     return -1;
                 }
+            }];
+            case 'chris-intro': return [{
+                type: 'text',
+                text: 'Yo!'
+            }, {
+                type: 'actions',
+                time: 2.0,
+                actions: [{
+                    target: 'chris',
+                    type: 'move-x',
+                    to: { x: 154 }
+                }, {
+                    target: 'chris',
+                    type: 'anim',
+                    anim: 'walk'
+                }]
+            }, {
+                type: 'actions',
+                time: 0.0,
+                actions: [{
+                    target: 'chris',
+                    type: 'anim',
+                    anim: 'stand'
+                }, {
+                    target: 'chris',
+                    type: 'flip-x',
+                    flipX: true
+                }]
+            }, {
+                type: 'text',
+                text: 'How did you get out?'
+            }, {
+                type: 'text',
+                text: '... ...'
+            }, {
+                type: 'text',
+                text: 'She "Trusts" you?'
+            }, {
+                type: 'text',
+                text: 'wow'
+            }, {
+                type: 'text',
+                text: '... ...'
+            }, {
+                type: 'text',
+                text: 'Good one mom'
             }];
             default: return null;
         }
