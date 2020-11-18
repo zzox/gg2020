@@ -3,6 +3,7 @@ package data;
 typedef Room = {
     var path:String;
     var type:String;
+    var ?universalStart:Bool;
 }
 
 class Rooms {
@@ -15,6 +16,11 @@ class Rooms {
             case 'ty-living-room': return {
                 path: AssetPaths.ty_living_room__tmx,
                 type: 'room'
+            };
+            case 'hometown': return {
+                path: AssetPaths.hometown__tmx,
+                type: 'outdoor',
+                universalStart: true
             };
             default: return null;
         }

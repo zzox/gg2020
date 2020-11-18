@@ -77,7 +77,7 @@ class PlayState extends FlxState {
 		createMap(room);
 
 		// TODO: get which direction player should be facing
-		var start:FlxPoint = findStartingPoint();
+		var start:FlxPoint = findStartingPoint(room.universalStart);
 
 		_player = new Player(start.x, start.y, this, false);
 
@@ -90,6 +90,12 @@ class PlayState extends FlxState {
 		FlxTween.tween(_filter, { alpha: 0 }, 0.5, { onComplete: (_:FlxTween) -> {
 			worldStatus = null;
 		}});
+
+		if (room.type == 'outdoor') {
+			camera.setScrollBoundsRect(16, 16, GAME_WIDTH * 2, GAME_HEIGHT);
+			FlxG.worldBounds.set(16, 16, GAME_WIDTH * 2, GAME_HEIGHT);
+			camera.follow(_player);
+		}
 	}
 
 	override public function update(elapsed:Float) {		
@@ -119,6 +125,14 @@ class PlayState extends FlxState {
 			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 			.setPosition(0, yUpOffset);
 		add(_groundBackLayer);
+
+		if (map.getLayer('ground-middle') != null) {
+			var _groundMiddleLayer = new FlxTilemap();
+			_groundMiddleLayer.loadMapFromArray(cast(map.getLayer('ground-middle'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
+				map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+				.setPosition(0, yUpOffset);
+			add(_groundMiddleLayer);
+		}
 		
 		var _backgroundLayer = new FlxTilemap();
 		_backgroundLayer.loadMapFromArray(cast(map.getLayer('background'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
@@ -151,10 +165,15 @@ class PlayState extends FlxState {
 			add(_itemsLayerAngledRight);
 		}
 
+		var collisionOutdoorYOffset = 0;
+		if (room.type == 'outdoor') {
+			collisionOutdoorYOffset = 8;
+		}
+
 		_collisionLayer = new FlxTilemap();
 		_collisionLayer.loadMapFromArray(cast(map.getLayer('collision'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
 			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
-			.setPosition(0, yUpOffset);
+			.setPosition(0, yUpOffset + collisionOutdoorYOffset);
 		_collisionLayer.visible = false;
 
 
@@ -236,7 +255,7 @@ class PlayState extends FlxState {
 		// soft cinematics
 	}
 
-	function findStartingPoint ():FlxPoint {
+	function findStartingPoint (universalStart:Bool):FlxPoint {
 		if (GlobalState.instance.fromWorld) {
 			var currentWorld = GlobalState.instance.currentWorld;
 
@@ -260,7 +279,7 @@ class PlayState extends FlxState {
 
 		var roomName:Null<String> = GlobalState.instance.lastRoom;
 
-		if (roomName == null) {
+		if (roomName == null || universalStart) {
 			roomName = 'start';
 		}
 
