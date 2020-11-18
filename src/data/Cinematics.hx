@@ -85,7 +85,7 @@ class Cinematics {
                 type: 'callback',
                 callback: () -> {
                     GlobalState.instance.momIsSleeping = true;
-                    return 0;
+                    return -1;
                 }
             }];
             default: return null;

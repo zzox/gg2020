@@ -332,14 +332,12 @@ class PlayState extends FlxState {
 			default: null;
 		}
 
-		if (toIndex == 0) {
+		if (toIndex == -1) {
+			endCinematic();
+		} else if (toIndex == 0) {
 			cinematicIndex++;
 		} else {
 			cinematicIndex = toIndex;
-			doCinematic();
-		}
-
-		if (cin.type == 'callback' && toIndex == 0) {
 			doCinematic();
 		}
 	}
