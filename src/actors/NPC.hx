@@ -79,8 +79,8 @@ class NPC extends FlxSprite {
         }
 
         animation.add('stand', [0]);
-        animation.add('walk', [3, 3, 0, 4, 4, 0], 8);
-        animation.add('breathe', [0, 0, 0, 1, 2, 2, 1], 8);
+        animation.add('walk', [1, 1, 0, 2, 2, 0], 8);
+        animation.add('breathe', [0, 0, 0, 3, 4, 4, 3], 8);
 
         animation.play('stand');
     }

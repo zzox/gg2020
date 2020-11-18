@@ -26,6 +26,16 @@ class NPCs {
                 }],
                 qualify: () -> !GlobalState.instance.momIsSleeping
             };
+            case 'joy': return {
+                graphic: AssetPaths.joy__png,
+                bubbles: [],
+                qualify: () -> true
+            };
+            case 'chris': return {
+                graphic: AssetPaths.chris__png,
+                bubbles: [],
+                qualify: () -> true
+            };
             default: return null;
         }
     }
