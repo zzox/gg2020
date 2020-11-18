@@ -14,7 +14,7 @@ class GlobalState {
     public var momIsSleeping:Bool = false;
 
     private function new () {
-        currentRoom = 'hometown';
+        currentRoom = 'ty-room';
         lastRoom = null;
         currentWorld = null;
     }

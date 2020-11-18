@@ -91,7 +91,7 @@ class Cinematics {
             }];
             case 'chris-intro': return [{
                 type: 'text',
-                text: 'Yo!'
+                text: 'Hey!'
             }, {
                 type: 'actions',
                 time: 2.0,

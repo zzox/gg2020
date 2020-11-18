@@ -6,6 +6,8 @@ typedef NPCData = {
     var graphic:String;
     var bubbles:Array<Bubble>;
     var qualify:Function;
+    var follow:Bool;
+    var flipX:Bool;
 }
 
 typedef Bubble = {
@@ -19,6 +21,8 @@ class NPCs {
         switch (name) {
             case 'mom': return {
                 graphic: AssetPaths.mom__png,
+                follow: true,
+                flipX: false,
                 bubbles: [{
                     dir: 'right',
                     world: 'mom-thought',
@@ -28,11 +32,22 @@ class NPCs {
             };
             case 'joy': return {
                 graphic: AssetPaths.joy__png,
+                flipX: false,
+                follow: false,
                 bubbles: [],
                 qualify: () -> true
             };
             case 'chris': return {
                 graphic: AssetPaths.chris__png,
+                flipX: false,
+                follow: true,
+                bubbles: [],
+                qualify: () -> true
+            };
+            case 'old-woman': return {
+                graphic: AssetPaths.old_woman__png,
+                flipX: true,
+                follow: false,
                 bubbles: [],
                 qualify: () -> true
             };

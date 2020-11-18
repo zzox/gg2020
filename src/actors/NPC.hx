@@ -2,6 +2,7 @@ package actors;
 
 import data.GlobalState;
 import data.NPCs.Bubble;
+import data.NPCs.NPCData;
 import flixel.FlxSprite;
 import scenes.PlayState;
 
@@ -26,10 +27,10 @@ class NPC extends FlxSprite {
     public var _thoughtBubble:Null<ThoughtBubble>;
     public var _thoughtBubbleBackground:Null<FlxSprite>;
 
-    public function new (x:Float, y:Float, scene:PlayState, name:String, graphic:String, bubbles:Array<Bubble>) {
+    public function new (x:Float, y:Float, scene:PlayState, name:String, npcData:NPCData) {
         super(x, y);
 
-        loadGraphic(graphic, true, 16, 24);
+        loadGraphic(npcData.graphic, true, 16, 24);
         // MD:
         offset.set(4, 7);
         setSize(11, 13);
@@ -37,11 +38,13 @@ class NPC extends FlxSprite {
         this.name = name;
         _scene = scene;
 
-        // MD:
-        follow = true;
+        follow = npcData.follow;
+        flipX = npcData.flipX;
 
-        for (bubble in bubbles) {
-            if (!GlobalState.instance.completedWorlds.contains(bubble.world)) {
+        for (bubble in npcData.bubbles) {
+            // we add the bubble if it was completed but only if it wasn't JUST completed
+            if (!GlobalState.instance.completedWorlds.contains(bubble.world) ||
+                GlobalState.instance.currentWorld == bubble.world) {
                 if (bubble.dir == 'right') {
                     _bubbles = new FlxSprite(x + 8, y - 12);
                     _bubbles.loadGraphic(AssetPaths.thought_bubbles__png, true, 16, 16);
@@ -79,7 +82,8 @@ class NPC extends FlxSprite {
         }
 
         animation.add('stand', [0]);
-        animation.add('walk', [1, 1, 0, 2, 2, 0], 8);
+        animation.add('walk', [1, 1, 0, 2, 2, 0], 7);
+        animation.add('run', [1, 1, 0, 2, 2, 0], 9);
         animation.add('breathe', [0, 0, 0, 3, 4, 4, 3], 8);
 
         animation.play('stand');

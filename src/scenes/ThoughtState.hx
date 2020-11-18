@@ -135,6 +135,7 @@ class ThoughtState extends FlxState {
 
 	function winLevel () {
 		GlobalState.instance.wonWorld = true;
+		GlobalState.instance.completedWorlds.push(GlobalState.instance.currentWorld);
 		worldStatus = true;
 		_player.frozen = true;
 		FlxTween.tween(_filter, { alpha: 1 }, 0.66, { onComplete: exitLevel });

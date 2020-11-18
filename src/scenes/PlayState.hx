@@ -221,7 +221,7 @@ class PlayState extends FlxState {
 			s.map(item -> {
 				var npcData:NPCData = NPCs.getNPC(item.name);
 				if (npcData.qualify()) {
-					var npc = new NPC(item.x, item.y, this, item.name, npcData.graphic, npcData.bubbles);
+					var npc = new NPC(item.x, item.y, this, item.name, npcData);
 					_npcs.push(npc);
 					add(npc);
 					add(npc._bubbles);
@@ -275,23 +275,26 @@ class PlayState extends FlxState {
 	function findStartingPoint (universalStart:Bool):FlxPoint {
 		if (GlobalState.instance.fromWorld) {
 			var currentWorld = GlobalState.instance.currentWorld;
+			var startPoint:Null<FlxPoint> = null;
 
-			for (bubble in _thoughtBubbles) {
+			_thoughtBubbles.forEach(bubble -> {
 				if (bubble.name == currentWorld) {
 					if (GlobalState.instance.wonWorld) {
 						popBubbles(bubble.fromNPC);
-						GlobalState.instance.completedWorlds.push(currentWorld);
 						launchCinematic('$currentWorld-win');
 						bubble.popped = true;
+						trace('here!');
 					}
 
-					GlobalState.instance.currentWorld = null;
-					GlobalState.instance.fromWorld = false;
-					GlobalState.instance.wonWorld = false;
-
-					return new FlxPoint(bubble.x, bubble.y);
+					startPoint = new FlxPoint(bubble.x, bubble.y);
 				}
-			}
+			});
+
+			GlobalState.instance.currentWorld = null;
+			GlobalState.instance.fromWorld = false;
+			GlobalState.instance.wonWorld = false;
+
+			return startPoint;
 		}
 
 		var roomName:Null<String> = GlobalState.instance.lastRoom;
