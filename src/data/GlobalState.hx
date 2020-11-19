@@ -3,6 +3,7 @@ package data;
 class GlobalState {
     public static final instance:GlobalState = new GlobalState();
 
+    public var items:Array<String> = [];
     public var completedWorlds:Array<String> = [];
     public var completedXCinematics:Array<String> = [];
     public var currentRoom:String;

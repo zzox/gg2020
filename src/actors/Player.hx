@@ -28,6 +28,7 @@ class Player extends FlxSprite {
 	public var dashingTime:Float;
 	public var hasHitFloor:Bool;
 	public var frozen:Bool;
+	public var presenting:Bool;
 
 	var _scene:Dynamic;
 
@@ -70,6 +71,7 @@ class Player extends FlxSprite {
 		animation.add('pre-dash', [9]);
 		animation.add('dash', [6, 7, 7], 16);
 		animation.add('frozen', [4]);
+		animation.add('present', [10]);
 
 		maxVelocity.set(100, 150);
 
@@ -86,6 +88,7 @@ class Player extends FlxSprite {
 		hasDashed = false;
 		hasHitFloor = false;
 		frozen = false;
+		presenting = false;
 		jumpTime = 0.0;
 		dashingTime = 0.0;
 		deadTime = 0.0;
@@ -293,6 +296,11 @@ class Player extends FlxSprite {
 	}
 
 	function handleAnimation (touchingFloor:Bool) {
+		if (presenting) {
+			animation.play('present');
+			return;
+		}
+
 		if (dashingTime > 0) {
 			if (dashingTime < DASH_TIME - PRE_DASH) {
 				animation.play('dash');

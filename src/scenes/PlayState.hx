@@ -1,5 +1,6 @@
 package scenes;
 
+import objects.Item;
 import actors.NPC;
 import actors.NPC.ThoughtBubble;
 import actors.Player;
@@ -45,6 +46,8 @@ class PlayState extends FlxState {
 	var _npcs:Array<NPC>;
 
 	var _thoughtBubbles:FlxTypedGroup<ThoughtBubble>;
+
+	var _items:FlxTypedGroup<Item>;
 
 	var _filter:FlxSprite;
 
@@ -105,6 +108,7 @@ class PlayState extends FlxState {
 		if (_cinematic == null && worldStatus == null) {
 			checkExits();
 			FlxG.overlap(_thoughtBubbles, _player, overlapThoughtBubbles);
+			FlxG.overlap(_items, _player, getItem);
 		}
 
 		FlxG.collide(_collisionLayer, _player);
@@ -213,6 +217,19 @@ class PlayState extends FlxState {
 				_xCinematics.push(item);
 			});
 		}
+
+		_items = new FlxTypedGroup<Item>();
+		if (map.getLayer('item-objects') != null) {
+			var s = cast(map.getLayer('item-objects'), TiledObjectLayer).objects;
+			s.map(item -> {
+				if (!GlobalState.instance.items.contains(item.name)) {
+					var _item = new Item(item.x, item.y, item.name);
+					_items.add(_item);
+				}
+				return null;
+			});
+		}
+		add (_items);
 
 		_npcs = [];
 		_thoughtBubbles = new FlxTypedGroup<ThoughtBubble>();
@@ -333,6 +350,30 @@ class PlayState extends FlxState {
 				FlxG.switchState(new ThoughtState());
 			}});
 		}
+	}
+
+	function getItem (item:Item, player:Player) {
+		var name = item.name;
+		GlobalState.instance.items.push(name);
+		worldStatus = true;
+		item.destroy();
+		player.presenting = true;
+
+		var _displayItem = new Item(player.x + 4, player.y - 8, name);
+		add(_displayItem);
+		_cinematic = [{
+			type: 'text',
+			text: 'You got "$name"!'
+		}, {
+			type: 'callback',
+			callback: () -> {
+				worldStatus = null;
+				player.presenting = false;
+				_displayItem.destroy();
+				return -1;
+			}
+		}];
+		doCinematic();
 	}
 
 	function changeRoom (name:String) {
