@@ -18,5 +18,13 @@ class Item extends FlxSprite {
         animation.play(name);
         this.name = name;
     }
+
+    static public function getDescription (name:String) {
+        switch (name) {
+            case 'pills': return 'You use these for studying.';
+            case 'tickets': return 'Finally!';
+            default: return '';
+        }
+    }
 }
 

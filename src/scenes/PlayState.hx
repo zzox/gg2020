@@ -354,16 +354,17 @@ class PlayState extends FlxState {
 
 	function getItem (item:Item, player:Player) {
 		var name = item.name;
+		var description = Item.getDescription(name);
 		GlobalState.instance.items.push(name);
 		worldStatus = true;
 		item.destroy();
 		player.presenting = true;
 
-		var _displayItem = new Item(player.x + 4, player.y - 8, name);
+		var _displayItem = new Item(player.x + 6, player.y - 8, name);
 		add(_displayItem);
 		_cinematic = [{
 			type: 'text',
-			text: 'You got "$name"!'
+			text: 'You picked up "$name"! $description'
 		}, {
 			type: 'callback',
 			callback: () -> {
