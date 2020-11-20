@@ -28,6 +28,7 @@ class ThoughtState extends FlxState {
 
 	var _collisionLayer:FlxTilemap;
 	public var _player:Player;
+	var _map:TiledMap;
 
 	public var _cinematic:Null<Array<Cinematic>> = null;
 
@@ -63,6 +64,10 @@ class ThoughtState extends FlxState {
 		FlxTween.tween(_filter, { alpha: 0 }, 0.5, { onComplete: (_:FlxTween) -> {
 			worldStatus = null;
 		}});
+
+		camera.setScrollBoundsRect(0, 0, _map.fullWidth, GAME_HEIGHT);
+		FlxG.worldBounds.set(0, 0, _map.fullWidth, GAME_HEIGHT);
+		camera.follow(_player);
 	}
 
 	override public function update(elapsed:Float) {
@@ -91,7 +96,7 @@ class ThoughtState extends FlxState {
 		var yUpOffset = -4;
 		var platformYOffset = 8;
 
-		var map = new TiledMap(world.tilemap);
+		_map = new TiledMap(world.tilemap);
 
 		var _colorFilter = new FlxSprite();
 		_colorFilter.makeGraphic(GAME_WIDTH, GAME_HEIGHT, world.backgroundColor);
@@ -102,15 +107,15 @@ class ThoughtState extends FlxState {
 		add(new BackgroundShapes(world.colors));
 
 		var _platformsLayer = new FlxTilemap();
-		_platformsLayer.loadMapFromArray(cast(map.getLayer('platforms'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
-			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+		_platformsLayer.loadMapFromArray(cast(_map.getLayer('platforms'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
+			_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 			.setPosition(0, yUpOffset);
 
 		add(_platformsLayer);
 
 		_collisionLayer = new FlxTilemap();
-		_collisionLayer.loadMapFromArray(cast(map.getLayer('collision'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
-			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+		_collisionLayer.loadMapFromArray(cast(_map.getLayer('collision'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
+			_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 			.setPosition(0, yUpOffset + platformYOffset);
 		_collisionLayer.allowCollisions = FlxObject.UP;
 		_collisionLayer.visible = false;
@@ -118,13 +123,13 @@ class ThoughtState extends FlxState {
 		add(_collisionLayer);
 
 		_hitItems = new FlxTypedGroup<HitItem>();
-		var items = cast(map.getLayer('hits'), TiledObjectLayer).objects;
-		items.map(item -> { _hitItems.add(new HitItem(item.x, item.y, this)); });
+		var items = cast(_map.getLayer('hits'), TiledObjectLayer).objects;
+		items.map(item -> { _hitItems.add(new HitItem(item.x, item.y, this, world.itemGraphic)); });
 		add(_hitItems);
 
 		itemsRemain = items.length;
 
-		var start = cast(map.getLayer('start'), TiledObjectLayer).objects[0];
+		var start = cast(_map.getLayer('start'), TiledObjectLayer).objects[0];
 
 		_filter = new FlxSprite(0, 0);
 		_filter.makeGraphic(GAME_WIDTH, GAME_HEIGHT, 0xff151515);

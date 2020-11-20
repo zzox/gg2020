@@ -30,7 +30,7 @@ class NPCs {
                     dir: 'right',
                     world: 'mom-thought',
                     background: AssetPaths.thought_background_pink__png
-                }],
+                }]
             };
             case 'joy': return {
                 graphic: AssetPaths.joy__png,
@@ -52,9 +52,13 @@ class NPCs {
                 graphic: AssetPaths.old_woman__png,
                 flipX: true,
                 follow: false,
-                bubbles: [],
                 canTalk: () -> true,
-                qualify: () -> true
+                qualify: () -> true,
+                bubbles: [{
+                    dir: 'left',
+                    world: 'old-woman-thought',
+                    background: AssetPaths.thought_background_orange__png
+                }]
             };
             default: return null;
         }

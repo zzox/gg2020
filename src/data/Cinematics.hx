@@ -53,7 +53,7 @@ class Cinematics {
 			}];
 			case 'chris-intro': return [{
 				type: 'text',
-				text: 'Hey!'
+				text: 'hey!'
 			}, {
 				type: 'actions',
 				time: 2.0,
@@ -64,7 +64,7 @@ class Cinematics {
 				}, {
 					target: 'chris',
 					type: 'anim',
-					anim: 'walk'
+					anim: 'run'
 				}]
 			}, {
 				type: 'actions',
@@ -80,13 +80,13 @@ class Cinematics {
 				}]
 			}, {
 				type: 'text',
-				text: 'How did you get out?'
+				text: 'how did you get out?'
 			}, {
 				type: 'text',
 				text: '... ...'
 			}, {
 				type: 'text',
-				text: 'She "Trusts" you?'
+				text: 'she "trusts" you?'
 			}, {
 				type: 'text',
 				text: 'wow'
@@ -95,7 +95,7 @@ class Cinematics {
 				text: '... ...'
 			}, {
 				type: 'text',
-				text: 'Good one mom'
+				text: 'good one mom'
 			}];
 			// wins
 			case 'mom-thought-win': return [{
@@ -158,10 +158,10 @@ class Cinematics {
 				}
 			}, {
 				type: 'text',
-				text: 'maybe you can give her some of your study medication'
+				text: 'maybe you can give her some of your study meds'
 			}, {
 				type: 'text',
-				text: 'you never take it anyway'
+				text: 'you never take them anyway'
 			}];
 			case 'joy-talk': return [{
 				type: 'callback',

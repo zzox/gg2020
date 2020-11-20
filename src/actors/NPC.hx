@@ -66,9 +66,15 @@ class NPC extends FlxSprite {
 					_thoughtBubbleBackground = new FlxSprite(x + 24, y - 20);
 					_thoughtBubbleBackground.loadGraphic(bubble.background, true, 16, 16);
 				} else {
-					_bubbles = new FlxSprite(x + 24, y);
+					_bubbles = new FlxSprite(x - 16, y - 12);
 					_bubbles.loadGraphic(AssetPaths.thought_bubbles__png, true, 16, 16);
 					_bubbles.flipX = true;
+
+					_thoughtBubble = new ThoughtBubble(x - 32, y - 20, bubble.world, name);
+					_thoughtBubble.loadGraphic(AssetPaths.thought_cloud__png, true, 16, 16);
+
+					_thoughtBubbleBackground = new FlxSprite(x - 32, y - 20);
+					_thoughtBubbleBackground.loadGraphic(bubble.background, true, 16, 16);
 				}
 			}
 		}
@@ -94,7 +100,7 @@ class NPC extends FlxSprite {
 
 		animation.add('stand', [0]);
 		animation.add('walk', [1, 1, 0, 2, 2, 0], 7);
-		animation.add('run', [1, 1, 0, 2, 2, 0], 9);
+		animation.add('run', [1, 1, 0, 2, 2, 0], 10);
 		animation.add('breathe', [0, 0, 0, 3, 4, 4, 3], 8);
 
 		animation.play('stand');
