@@ -4,10 +4,11 @@ import haxe.Constraints.Function;
 
 typedef NPCData = {
     var graphic:String;
-    var bubbles:Array<Bubble>;
-    var qualify:Function;
     var follow:Bool;
     var flipX:Bool;
+    var qualify:Function;
+    var canTalk:Function;
+    var bubbles:Array<Bubble>;
 }
 
 typedef Bubble = {
@@ -23,32 +24,36 @@ class NPCs {
                 graphic: AssetPaths.mom__png,
                 follow: true,
                 flipX: false,
+                qualify: () -> !GlobalState.instance.momIsSleeping,
+                canTalk: () -> false,
                 bubbles: [{
                     dir: 'right',
                     world: 'mom-thought',
                     background: AssetPaths.thought_background_pink__png
                 }],
-                qualify: () -> !GlobalState.instance.momIsSleeping
             };
             case 'joy': return {
                 graphic: AssetPaths.joy__png,
                 flipX: false,
                 follow: false,
-                bubbles: [],
-                qualify: () -> true
+                qualify: () -> true,
+                canTalk: () -> true,
+                bubbles: []
             };
             case 'chris': return {
                 graphic: AssetPaths.chris__png,
                 flipX: false,
                 follow: true,
-                bubbles: [],
-                qualify: () -> true
+                qualify: () -> true,
+                canTalk: () -> true,
+                bubbles: []
             };
             case 'old-woman': return {
                 graphic: AssetPaths.old_woman__png,
                 flipX: true,
                 follow: false,
                 bubbles: [],
+                canTalk: () -> true,
                 qualify: () -> true
             };
             default: return null;

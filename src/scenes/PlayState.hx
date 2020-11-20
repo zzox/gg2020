@@ -243,6 +243,7 @@ class PlayState extends FlxState {
 					add(npc);
 					add(npc._bubbles);
 					add(npc._thoughtBubbleBackground);
+					add(npc._upArrow);
 					_thoughtBubbles.add(npc._thoughtBubble);
 				}
 				return null; // needs a return statement to work??
@@ -300,7 +301,6 @@ class PlayState extends FlxState {
 						popBubbles(bubble.fromNPC);
 						launchCinematic('$currentWorld-win');
 						bubble.popped = true;
-						trace('here!');
 					}
 
 					startPoint = new FlxPoint(bubble.x, bubble.y);
@@ -386,7 +386,7 @@ class PlayState extends FlxState {
 		}});
 	}
 
-	function launchCinematic (name:String) {
+	public function launchCinematic (name:String) {
 		_cinematic = Cinematics.getCinematic(name);
 		doCinematic();
 	}

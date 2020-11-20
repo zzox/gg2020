@@ -13,6 +13,7 @@ class GlobalState {
     public var wonWorld:Bool = false;
 
     public var momIsSleeping:Bool = false;
+    public var offeredJoyPills:Bool = false;
 
     private function new () {
         currentRoom = 'ty-room';
