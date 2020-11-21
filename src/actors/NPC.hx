@@ -52,29 +52,29 @@ class NPC extends FlxSprite {
 		_upArrow.visible = false;
 		FlxTween.tween(_upArrow, {y: _upArrow.y + 2}, 1, { type: FlxTweenType.PINGPONG, ease: FlxEase.sineInOut });
 
-		for (bubble in npcData.bubbles) {
+		if (npcData.bubble != null && npcData.bubble.qualify()) {
 			// we add the bubble if it was completed but only if it wasn't JUST completed
-			if (!GlobalState.instance.completedWorlds.contains(bubble.world) ||
-				GlobalState.instance.currentWorld == bubble.world) {
-				if (bubble.dir == 'right') {
+			if (!GlobalState.instance.completedWorlds.contains(npcData.bubble.world) ||
+				GlobalState.instance.currentWorld == npcData.bubble.world) {
+				if (npcData.bubble.dir == 'right') {
 					_bubbles = new FlxSprite(x + 8, y - 12);
 					_bubbles.loadGraphic(AssetPaths.thought_bubbles__png, true, 16, 16);
 
-					_thoughtBubble = new ThoughtBubble(x + 24, y - 20, bubble.world, name);
+					_thoughtBubble = new ThoughtBubble(x + 24, y - 20, npcData.bubble.world, name);
 					_thoughtBubble.loadGraphic(AssetPaths.thought_cloud__png, true, 16, 16);
 
 					_thoughtBubbleBackground = new FlxSprite(x + 24, y - 20);
-					_thoughtBubbleBackground.loadGraphic(bubble.background, true, 16, 16);
+					_thoughtBubbleBackground.loadGraphic(npcData.bubble.background, true, 16, 16);
 				} else {
 					_bubbles = new FlxSprite(x - 16, y - 12);
 					_bubbles.loadGraphic(AssetPaths.thought_bubbles__png, true, 16, 16);
 					_bubbles.flipX = true;
 
-					_thoughtBubble = new ThoughtBubble(x - 32, y - 20, bubble.world, name);
+					_thoughtBubble = new ThoughtBubble(x - 32, y - 20, npcData.bubble.world, name);
 					_thoughtBubble.loadGraphic(AssetPaths.thought_cloud__png, true, 16, 16);
 
 					_thoughtBubbleBackground = new FlxSprite(x - 32, y - 20);
-					_thoughtBubbleBackground.loadGraphic(bubble.background, true, 16, 16);
+					_thoughtBubbleBackground.loadGraphic(npcData.bubble.background, true, 16, 16);
 				}
 			}
 		}

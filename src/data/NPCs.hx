@@ -8,13 +8,14 @@ typedef NPCData = {
     var flipX:Bool;
     var qualify:Function;
     var canTalk:Function;
-    var bubbles:Array<Bubble>;
+    var ?bubble:Bubble;
 }
 
 typedef Bubble = {
     var dir:String;
     var world:String;
     var background:String;
+    var qualify:Function;
 }
 
 class NPCs {
@@ -26,11 +27,12 @@ class NPCs {
                 flipX: false,
                 qualify: () -> !GlobalState.instance.momIsSleeping,
                 canTalk: () -> false,
-                bubbles: [{
+                bubble: {
+                    qualify: () -> true,
                     dir: 'right',
                     world: 'mom-thought',
                     background: AssetPaths.thought_background_pink__png
-                }]
+                }
             };
             case 'joy': return {
                 graphic: AssetPaths.joy__png,
@@ -38,15 +40,19 @@ class NPCs {
                 follow: false,
                 qualify: () -> true,
                 canTalk: () -> true,
-                bubbles: []
+                bubble: {
+                    qualify: () -> !GlobalState.instance.items.contains('pills'),
+                    dir: 'right',
+                    world: 'joy-thought',
+                    background: AssetPaths.thought_background_purple__png
+                }
             };
             case 'chris': return {
                 graphic: AssetPaths.chris__png,
                 flipX: false,
                 follow: true,
                 qualify: () -> true,
-                canTalk: () -> true,
-                bubbles: []
+                canTalk: () -> true
             };
             case 'old-woman': return {
                 graphic: AssetPaths.old_woman__png,
@@ -54,11 +60,12 @@ class NPCs {
                 follow: false,
                 canTalk: () -> true,
                 qualify: () -> true,
-                bubbles: [{
+                bubble: {
+                    qualify: () -> true,
                     dir: 'left',
                     world: 'old-woman-thought',
                     background: AssetPaths.thought_background_orange__png
-                }]
+                }
             };
             default: return null;
         }

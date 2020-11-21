@@ -19,9 +19,15 @@ class ThoughtWorlds {
             case 'old-woman-thought': return {
                 tilemap: AssetPaths.thought_old_woman__tmx,
                 backgroundColor: 0xfff68f37,
-                colors: [0xffffffff, 0xff20b562, 0xf231712],
+                colors: [0xffffffff, 0xff20b562, 0xff231712],
                 itemGraphic: AssetPaths.orange_target__png
             };
+            case 'joy-thought': return {
+                tilemap: AssetPaths.thought_joy__tmx,
+                backgroundColor: 0xffa328b3,
+                colors: [0xffffffff, 0xffcf3c31, 0xff231712],
+                itemGraphic: AssetPaths.purple_target__png
+            }
             default: return null;
         }
     }

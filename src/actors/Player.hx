@@ -29,6 +29,7 @@ class Player extends FlxSprite {
 	public var hasHitFloor:Bool;
 	public var frozen:Bool;
 	public var presenting:Bool;
+	public var launched:Bool;
 
 	var _scene:Dynamic;
 
@@ -89,6 +90,7 @@ class Player extends FlxSprite {
 		hasHitFloor = false;
 		frozen = false;
 		presenting = false;
+		launched = false;
 		jumpTime = 0.0;
 		dashingTime = 0.0;
 		deadTime = 0.0;
@@ -196,7 +198,7 @@ class Player extends FlxSprite {
         }
 
 		if (!reallyHurt) {
-			if (jumpPressed && (touchingFloor || (airTime < AIR_TIME_BUFFER && !jumping))
+			if (!launched && jumpPressed && (touchingFloor || (airTime < AIR_TIME_BUFFER && !jumping))
 				&& dashingTime < 0 && !_scene.justSubmitted) {
 				jumping = true;
 				jumpTime = JUMP_START_TIME;
@@ -232,7 +234,9 @@ class Player extends FlxSprite {
 		} else {
 			// TODO: add drag ONLY when the user interacts with the game,
 			// not when `reallyHurt` is over, or when player touches the ground
-			addDrag();
+			if (!launched) {
+				addDrag();
+			}
 		}
 
 		if (touchingFloor) {

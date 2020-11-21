@@ -17,6 +17,7 @@ import flixel.math.FlxPoint;
 import flixel.system.scaleModes.PixelPerfectScaleMode;
 import flixel.tile.FlxTilemap;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
+import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import objects.BackgroundShapes;
 import objects.HitItem;
@@ -25,6 +26,7 @@ class ThoughtState extends FlxState {
 	static inline final GAME_WIDTH = 240;
 	static inline final GAME_HEIGHT = 135;
 	static inline final GAME_HEIGHT_DIFF = 8;
+	static inline final LAUNCH_VELOCITY = 400;
 
 	var _collisionLayer:FlxTilemap;
 	public var _player:Player;
@@ -32,6 +34,7 @@ class ThoughtState extends FlxState {
 
 	public var _cinematic:Null<Array<Cinematic>> = null;
 
+	var _trampolines:FlxTypedGroup<FlxSprite>;
 	var _hitItems:FlxTypedGroup<HitItem>;
 	var itemsRemain:Int;
 
@@ -78,7 +81,20 @@ class ThoughtState extends FlxState {
 		}
 
 		FlxG.collide(_collisionLayer, _player);
+		FlxG.collide(_trampolines, _player, collideTrampolines);
 		FlxG.overlap(_hitItems, _player, hitItem);
+	}
+
+	function collideTrampolines (trampoline:FlxSprite, player:Player) {
+		if (player.isTouching(FlxObject.DOWN) && !player.isTouching(FlxObject.LEFT) && !player.isTouching(FlxObject.RIGHT)) {
+			trampoline.animation.play('bounce');
+			player.maxVelocity.y = LAUNCH_VELOCITY;
+			player.velocity.y = -LAUNCH_VELOCITY;
+			player.launched = true;
+			FlxTween.tween(player.maxVelocity, { y: 150 }, 1.0, { ease: FlxEase.quartIn, onComplete: (_:FlxTween) -> {
+				player.launched = false;
+			}});
+		}
 	}
 
 	function hitItem (item:HitItem, _:Player) {
@@ -126,6 +142,24 @@ class ThoughtState extends FlxState {
 		var items = cast(_map.getLayer('hits'), TiledObjectLayer).objects;
 		items.map(item -> { _hitItems.add(new HitItem(item.x, item.y, this, world.itemGraphic)); });
 		add(_hitItems);
+
+		_trampolines = new FlxTypedGroup<FlxSprite>();
+		if (_map.getLayer('trampolines') != null) {
+			var trampolines = cast(_map.getLayer('trampolines'), TiledObjectLayer).objects;
+			trampolines.map(t -> {
+				var trampoline = new FlxSprite(t.x, t.y + yUpOffset + platformYOffset);
+				trampoline.loadGraphic(AssetPaths.trampoline__png, true, 24, 16);
+				trampoline.setSize(16, 4);
+				trampoline.offset.set(4, 6);
+				trampoline.animation.add('idle', [0]);
+				trampoline.animation.add('bounce', [1, 2, 3], 8, false);
+				trampoline.animation.play('idle');
+				trampoline.immovable = true;
+				_trampolines.add(trampoline);
+			});
+		}
+
+		add(_trampolines);
 
 		itemsRemain = items.length;
 

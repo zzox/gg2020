@@ -137,6 +137,47 @@ class Cinematics {
 					return -1;
 				}
 			}];
+			case 'old-woman-thought-win': return [{
+				type: 'text',
+				text: 'sorry if i seem uspet'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'i haven\'t heard from my grandkids in months'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'i think i hear the bus coming'
+			}, {
+				type: 'room-change',
+				roomName: 'bus'
+			}];
+			case 'joy-thought-win': return [{
+				type: 'text',
+				text: 'i guess i can give you a ride'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'you two are seeing DJ Hellgirl?'
+			}, {
+				type: 'text',
+				text: 'you have surpirisingly good taste'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'alright, get your friend and get in the car'
+			}];
 			// dialog
 			case 'chris-talk': return [{
 				type: 'text',
