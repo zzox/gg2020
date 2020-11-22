@@ -253,7 +253,7 @@ class PlayState extends FlxState {
 
 		_blueFilter = new FlxSprite();
 		_blueFilter.makeGraphic(GAME_WIDTH, GAME_HEIGHT, 0xff00177d);
-		_blueFilter.alpha = 0.3;
+		_blueFilter.alpha = room.darknessLevel;
 		_blueFilter.scrollFactor.set(0, 0);
 
 		_filter = new FlxSprite();

@@ -161,22 +161,25 @@ class Cinematics {
 			}];
 			case 'joy-thought-win': return [{
 				type: 'text',
+				text: 'who are you seeing?'
+			}, {
+				type: 'text',
+				text: 'DJ Hellgirl?'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
 				text: 'i guess i can give you a ride'
 			}, {
 				type: 'text',
-				text: '... ...'
+				text: 'get your friend and get in the car'
 			}, {
 				type: 'text',
-				text: 'you two are seeing DJ Hellgirl?'
+				text: '... ...'
 			}, {
 				type: 'text',
 				text: 'you have surpirisingly good taste'
-			}, {
-				type: 'text',
-				text: '... ...'
-			}, {
-				type: 'text',
-				text: 'alright, get your friend and get in the car'
 			}];
 			// dialog
 			case 'chris-talk': return [{
@@ -184,10 +187,10 @@ class Cinematics {
 				text: 'still want to catch the bus?'
 			}, {
 				type: 'text',
-				text: 'Joy is outside her house'
+				text: 'i see Joy is outside her house'
 			}, {
 				type: 'text',
-				text: 'maybe she\'ll give us a ride'
+				text: 'maybe she\'ll give us a ride, instead'
 			}, {
 				type: 'callback',
 				callback: () -> {

@@ -37,7 +37,6 @@ class NPC extends FlxSprite {
 		super(x, y);
 
 		loadGraphic(npcData.graphic, true, 16, 24);
-		// MD:
 		offset.set(4, 7);
 		setSize(11, 13);
 

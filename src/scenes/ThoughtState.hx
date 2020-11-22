@@ -152,8 +152,9 @@ class ThoughtState extends FlxState {
 				trampoline.setSize(16, 4);
 				trampoline.offset.set(4, 6);
 				trampoline.animation.add('idle', [0]);
-				trampoline.animation.add('bounce', [1, 2, 3], 8, false);
+				trampoline.animation.add('bounce', [1, 2, 3, 2, 3], 8, false);
 				trampoline.animation.play('idle');
+				trampoline.animation.finishCallback = (_:String) -> trampoline.animation.play('idle');
 				trampoline.immovable = true;
 				_trampolines.add(trampoline);
 			});

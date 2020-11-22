@@ -25,7 +25,7 @@ class ThoughtWorlds {
             case 'joy-thought': return {
                 tilemap: AssetPaths.thought_joy__tmx,
                 backgroundColor: 0xffa328b3,
-                colors: [0xffffffff, 0xffcf3c31, 0xff231712],
+                colors: [0xffffffff, 0xff6a31ca, 0xff231712],
                 itemGraphic: AssetPaths.purple_target__png
             }
             default: return null;
