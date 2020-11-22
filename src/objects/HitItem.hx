@@ -12,13 +12,13 @@ class HitItem extends FlxSprite {
     public function new (x:Float, y:Float, scene:ThoughtState, graphic:String) {
         super(x, y);
 
-        setSize(4, 4);
-        offset.set(6, 6);
-
         loadGraphic(graphic, true, 16, 16);
         animation.add('spin', [0, 1, 2, 3, 4], 8);
         animation.add('explode', [5, 6, 7, 8], 8, false);
         animation.play('spin');
+
+        offset.set(6, 6);
+        setSize(4, 4);
 
         FlxTween.tween(this, {y: y + 2}, 1, { type: FlxTweenType.PINGPONG, ease: FlxEase.sineInOut });
 
