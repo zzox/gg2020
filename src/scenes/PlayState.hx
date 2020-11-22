@@ -21,6 +21,7 @@ import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
+import flixel.system.FlxSound;
 import flixel.system.scaleModes.PixelPerfectScaleMode;
 import flixel.tile.FlxTilemap;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
@@ -32,6 +33,7 @@ class PlayState extends FlxState {
 	static inline final GAME_HEIGHT = 135;
 	static inline final EXIT_DISTANCE = 4;
 	static inline final FROM_EXIT_DISTANCE = 8;
+	static inline final LEAVE_TIME = 0.5;
 
 	var _collisionLayer:FlxTilemap;
 
@@ -58,6 +60,8 @@ class PlayState extends FlxState {
 
 	var worldStatus:Null<Bool> = null;
 	public var justSubmitted:Bool = false;
+
+	var _bgSound:FlxSound;
 
 	override public function create() {
 		super.create();
@@ -99,6 +103,25 @@ class PlayState extends FlxState {
 			camera.setScrollBoundsRect(16, 16, GAME_WIDTH * 2, GAME_HEIGHT);
 			FlxG.worldBounds.set(16, 16, GAME_WIDTH * 2, GAME_HEIGHT);
 			camera.follow(_player);
+		}
+
+		if (FlxG.sound.defaultMusicGroup.sounds.length == 0) {
+			FlxG.sound.play(AssetPaths.crickets__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.theme1__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
+		}
+
+		// need to use integers for now, since I don't know how to
+		// properly name the sounds, I'm looking for a path variable or something
+		for (i in 0...FlxG.sound.defaultMusicGroup.sounds.length) {
+			var sound = FlxG.sound.defaultMusicGroup.sounds[i];
+			sound.persist = true;
+
+			var vol:Float = 0.0;
+			if (room.sounds.contains(i)) {
+				vol = 1.0;
+			}
+
+			FlxTween.tween(sound, { volume: vol }, 1.5);
 		}
 	}
 
@@ -349,6 +372,14 @@ class PlayState extends FlxState {
 				GlobalState.instance.currentWorld = bubble.name;
 				FlxG.switchState(new ThoughtState());
 			}});
+
+			for (i in 0...FlxG.sound.defaultMusicGroup.sounds.length) {
+				var sound = FlxG.sound.defaultMusicGroup.sounds[i];
+				FlxTween.tween(sound, { volume: 0 }, LEAVE_TIME, { onComplete: (_:FlxTween) -> {
+					FlxG.sound.defaultMusicGroup.remove(sound);
+					sound.destroy();
+				}});
+			}
 		}
 	}
 
@@ -379,7 +410,7 @@ class PlayState extends FlxState {
 
 	function changeRoom (name:String) {
 		worldStatus = true;
-		FlxTween.tween(_filter, { alpha: 1 }, 0.5, { onComplete: (_:FlxTween) -> {
+		FlxTween.tween(_filter, { alpha: 1 }, LEAVE_TIME, { onComplete: (_:FlxTween) -> {
 			GlobalState.instance.lastRoom = GlobalState.instance.currentRoom;
 			GlobalState.instance.currentRoom = name;
 			FlxG.switchState(new PlayState());
