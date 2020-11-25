@@ -142,7 +142,7 @@ class PlayState extends FlxState {
 	}
 
 	function createMap (room) {
-		var yUpOffset = -4;
+		var yUpOffset = 4;
 		var xItemsOffset = 4;
 		var yItemsOffset = 4;
 
@@ -151,28 +151,28 @@ class PlayState extends FlxState {
 		var _groundBackLayer = new FlxTilemap();
 		_groundBackLayer.loadMapFromArray(cast(map.getLayer('ground-back'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
 			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
-			.setPosition(0, yUpOffset);
+			.setPosition(0, -yUpOffset);
 		add(_groundBackLayer);
 
 		if (map.getLayer('ground-middle') != null) {
 			var _groundMiddleLayer = new FlxTilemap();
 			_groundMiddleLayer.loadMapFromArray(cast(map.getLayer('ground-middle'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
 				map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
-				.setPosition(0, yUpOffset);
+				.setPosition(0, -yUpOffset);
 			add(_groundMiddleLayer);
 		}
 		
 		var _backgroundLayer = new FlxTilemap();
 		_backgroundLayer.loadMapFromArray(cast(map.getLayer('background'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
 			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
-			.setPosition(0, yUpOffset);
+			.setPosition(0, -yUpOffset);
 		add(_backgroundLayer);
 
 		if (map.getLayer('items') != null) {
 			var _itemsLayer = new FlxTilemap();
 			_itemsLayer.loadMapFromArray(cast(map.getLayer('items'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
 			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
-			.setPosition(0, yUpOffset);
+			.setPosition(0, -yUpOffset);
 			
 			add(_itemsLayer);
 		}
@@ -181,7 +181,7 @@ class PlayState extends FlxState {
 			var _itemsLayerAngledLeft = new FlxTilemap();
 			_itemsLayerAngledLeft.loadMapFromArray(cast(map.getLayer('items-angled-left'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
 				map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
-				.setPosition(0 + -xItemsOffset, 0 + yItemsOffset + yUpOffset);
+				.setPosition(0 + -xItemsOffset, 0 + yItemsOffset - yUpOffset);
 			add(_itemsLayerAngledLeft);
 		}
 
@@ -189,7 +189,7 @@ class PlayState extends FlxState {
 			var _itemsLayerAngledRight = new FlxTilemap();
 			_itemsLayerAngledRight.loadMapFromArray(cast(map.getLayer('items-angled-right'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
 				map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
-				.setPosition(0 + xItemsOffset + 1, 0 + yItemsOffset + yUpOffset);
+				.setPosition(0 + xItemsOffset + 1, 0 + yItemsOffset - yUpOffset);
 			add(_itemsLayerAngledRight);
 		}
 
@@ -201,7 +201,7 @@ class PlayState extends FlxState {
 		_collisionLayer = new FlxTilemap();
 		_collisionLayer.loadMapFromArray(cast(map.getLayer('collision'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
 			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
-			.setPosition(0, yUpOffset + collisionOutdoorYOffset);
+			.setPosition(0, collisionOutdoorYOffset - yUpOffset);
 		_collisionLayer.visible = false;
 
 
@@ -209,7 +209,7 @@ class PlayState extends FlxState {
 		if (map.getLayer('hard-exits') != null) {
 			var s = cast(map.getLayer('hard-exits'), TiledObjectLayer).objects;
 			s.map(item -> {
-				item.y += yUpOffset;
+				item.y -= yUpOffset;
 				_hardExits.push(item);
 			});
 		}
@@ -218,7 +218,7 @@ class PlayState extends FlxState {
 		if (map.getLayer('soft-exits') != null) {
 			var s = cast(map.getLayer('soft-exits'), TiledObjectLayer).objects;
 			s.map(item -> {
-				item.y += yUpOffset;
+				item.y -= yUpOffset;
 				_softExits.push(item);
 			});
 		}
@@ -227,7 +227,7 @@ class PlayState extends FlxState {
 		if (map.getLayer('hard-cinematics') != null) {
 			var s = cast(map.getLayer('hard-cinematics'), TiledObjectLayer).objects;
 			s.map(item -> {
-				item.y += yUpOffset;
+				item.y -= yUpOffset;
 				_hardCinematics.push(item);
 			});
 		}
@@ -236,7 +236,7 @@ class PlayState extends FlxState {
 		if (map.getLayer('x-cinematics') != null) {
 			var s = cast(map.getLayer('x-cinematics'), TiledObjectLayer).objects;
 			s.map(item -> {
-				item.y += yUpOffset;
+				item.y -= yUpOffset;
 				_xCinematics.push(item);
 			});
 		}

@@ -30,6 +30,13 @@ class Rooms {
                 darknessLevel: 0.5,
                 universalStart: true
             };
+            case 'bus': return {
+                path: AssetPaths.bus__tmx,
+                type: 'room',
+                sounds: [0, 1],
+                darknessLevel: 0.2,
+                universalStart: true
+            };
             default: return null;
         }
     }

@@ -183,19 +183,41 @@ class Cinematics {
 			}];
 			// dialog
 			case 'chris-talk': return [{
+				type: 'callback',
+				callback: () -> {
+					if (GlobalState.instance.currentRoom == 'bus') {
+						return 1;
+					}
+
+					if (GlobalState.instance.currentRoom == 'hometown') {
+						return 4;
+					}
+
+					return -1;
+				}
+			}, {
+				type: 'text',
+				text: 'i\'m so excited'
+			}, {
+				type: 'text',
+				text: 'do you think she\'ll drop that \'Til Death remix?'
+			}, {
+				type: 'callback',
+				callback: () -> -1
+			}, {
 				type: 'text',
 				text: 'still want to catch the bus?'
 			}, {
 				type: 'text',
-				text: 'i see Joy is outside her house'
+				text: 'because i see Joy is outside her house'
 			}, {
 				type: 'text',
-				text: 'maybe she\'ll give us a ride, instead'
+				text: 'maybe she\'ll give us a ride instead'
 			}, {
 				type: 'callback',
 				callback: () -> {
 					if (GlobalState.instance.items.contains('pills')) {
-						return 4;
+						return 8;
 					}
 
 					return -1;
@@ -245,11 +267,40 @@ class Cinematics {
 				text: 'aren\'t you, like, too young to be going out?'
 			}];
 			case 'old-woman-talk': return [{
+				type: 'callback',
+				callback: () -> {
+					if (GlobalState.instance.currentRoom == 'bus') {
+						return 1;
+					}
+
+					if (GlobalState.instance.currentRoom == 'hometown') {
+						return 4;
+					}
+
+					return -1;
+				}
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'what\'s with all the jumping?'
+			}, {
+				type: 'callback',
+				callback: () -> -1
+			}, {
 				type: 'text',
 				text: '... ...',
 			}, {
 				type: 'text',
 				text: 'kids out late can\'t be up to anything good'
+			}];
+			case 'bouncer-one-talk': return [{
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'you can never be too cool for public transportation'
 			}];
 			default: return null;
 		}

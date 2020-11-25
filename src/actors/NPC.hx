@@ -21,7 +21,7 @@ class ThoughtBubble extends FlxSprite {
 }
 
 class NPC extends FlxSprite {
-	static final TALK_DISTANCE = 8;
+	static final TALK_DISTANCE = 12;
 	public var name:String;
 	var follow:Bool;
 	var canTalk:Bool;

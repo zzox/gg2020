@@ -61,11 +61,31 @@ class NPCs {
                 canTalk: () -> true,
                 qualify: () -> true,
                 bubble: {
-                    qualify: () -> true,
+                    qualify: () -> GlobalState.instance.currentRoom == 'hometown',
                     dir: 'left',
                     world: 'old-woman-thought',
                     background: AssetPaths.thought_background_orange__png
                 }
+            };
+            case 'busdriver': return {
+                graphic: AssetPaths.busdriver__png,
+                flipX: false,
+                follow: false,
+                canTalk: () -> true,
+                qualify: () -> true,
+                bubble: {
+                    qualify: () -> true,
+                    dir: 'right',
+                    world: 'busdriver-thought',
+                    background: AssetPaths.thought_background_pink__png
+                }
+            };
+            case 'bouncer-one': return {
+                graphic: AssetPaths.bouncer_one__png,
+                flipX: true,
+                follow: false,
+                canTalk: () -> true,
+                qualify: () -> true
             };
             default: return null;
         }
