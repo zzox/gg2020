@@ -58,7 +58,6 @@ class ThoughtState extends FlxState {
 
 		bgColor = 0xffffffff;
 
-		// TODO: get which direction player should be facing
 		_player = new Player(start.x, start.y, this, true, false);
 		add(_player);
 		add(_filter);

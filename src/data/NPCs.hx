@@ -94,6 +94,34 @@ class NPCs {
                 canTalk: () -> true,
                 qualify: () -> true
             };
+            case 'creep-one': return {
+                graphic: AssetPaths.creep_one__png,
+                flipX: false,
+                follow: false,
+                canTalk: () -> true,
+                qualify: () -> true
+            };
+            case 'creep-two': return {
+                graphic: AssetPaths.creep_two__png,
+                flipX: true,
+                follow: false,
+                canTalk: () -> true,
+                qualify: () -> true
+            };
+            case 'dj-hellgirl': return {
+                graphic: AssetPaths.hellgirl__png,
+                flipX: false,
+                follow: true,
+                canTalk: () -> true,
+                qualify: () -> true
+            };
+            // case 'dancing-woman': return {
+            //     graphic: AssetPaths.dancing_woman__png,
+            //     flipX: false,
+            //     follow: false,
+            //     canTalk: () -> false,
+            //     qualify: () -> true
+            // };
             default: return null;
         }
     }

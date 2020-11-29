@@ -82,7 +82,6 @@ class PlayState extends FlxState {
 		FlxG.mouse.visible = false;
 
 		// camera.pixelPerfectRender = true;
-		// remove vvv when going live
 		FlxG.scaleMode = new PixelPerfectScaleMode();
 
 		// camera.followLerp = 0.5;
@@ -97,7 +96,6 @@ class PlayState extends FlxState {
 		var room:Room = Rooms.getRoom(GlobalState.instance.currentRoom);
 		createMap(room);
 
-		// TODO: get which direction player should be facing
 		var start:ExitPoint = findStartingPoint(room.universalStart);
 
 		_player = new Player(start.point.x, start.point.y, this, false, start.from == 'right');

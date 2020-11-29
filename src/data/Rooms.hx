@@ -44,6 +44,18 @@ class Rooms {
                 darknessLevel: 0.5,
                 universalStart: true
             };
+            case 'cafe': return {
+                path: AssetPaths.cafe__tmx,
+                type: 'room',
+                sounds: [0, 1],
+                darknessLevel: 0.1
+            };
+            case 'back-room': return {
+                path: AssetPaths.back_room__tmx,
+                type: 'room',
+                sounds: [0, 1],
+                darknessLevel: 0.1
+            };
             case 'alley': return {
                 path: AssetPaths.alley__tmx,
                 type: 'room',
@@ -56,6 +68,12 @@ class Rooms {
                 type: 'outdoor',
                 sounds: [0, 1],
                 darknessLevel: 0.5
+            };
+            case 'dock': return {
+                path: AssetPaths.dock__tmx,
+                type: 'outdoor',
+                sounds: [0, 1],
+                darknessLevel: 0.7
             };
             default: return null;
         }
