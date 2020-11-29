@@ -180,6 +180,9 @@ class Cinematics {
 			}, {
 				type: 'text',
 				text: 'you have surpirisingly good taste'
+			}, {
+				type: 'room-change',
+				roomName: 'downtown'
 			}];
 			// dialog
 			case 'chris-talk': return [{

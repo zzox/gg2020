@@ -16,7 +16,7 @@ class GlobalState {
     public var offeredJoyPills:Bool = false;
 
     private function new () {
-        currentRoom = 'ty-room';
+        currentRoom = 'downtown';
         lastRoom = null;
         currentWorld = null;
     }

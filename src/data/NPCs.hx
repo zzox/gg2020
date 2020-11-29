@@ -87,6 +87,13 @@ class NPCs {
                 canTalk: () -> true,
                 qualify: () -> true
             };
+            case 'bouncer-two': return {
+                graphic: AssetPaths.bouncer_two__png,
+                flipX: false,
+                follow: false,
+                canTalk: () -> true,
+                qualify: () -> true
+            };
             default: return null;
         }
     }

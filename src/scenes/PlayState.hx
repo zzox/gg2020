@@ -12,6 +12,7 @@ import data.Rooms;
 import data.Rooms.Room;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxG;
@@ -28,17 +29,29 @@ import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
 import objects.Dialog;
 import scenes.ThoughtState;
 
+typedef SoftExit = {
+	var tiledObj:TiledObject;
+	var spr:FlxSprite;
+}
+
+typedef ExitPoint = {
+	var point:FlxPoint;
+	var ?from:String;
+}
+
 class PlayState extends FlxState {
 	static inline final GAME_WIDTH = 240;
 	static inline final GAME_HEIGHT = 135;
 	static inline final EXIT_DISTANCE = 4;
+	static inline final SOFT_EXIT_DISTANCE = 12;
 	static inline final FROM_EXIT_DISTANCE = 8;
 	static inline final LEAVE_TIME = 0.5;
 
+	var _map:TiledMap;
 	var _collisionLayer:FlxTilemap;
 
 	var _hardExits:Array<TiledObject>;
-	var _softExits:Array<TiledObject>;
+	var _softExits:Array<SoftExit>;
 	var _hardCinematics:Array<TiledObject>;
 	var _xCinematics:Array<TiledObject>;
 
@@ -85,25 +98,25 @@ class PlayState extends FlxState {
 		createMap(room);
 
 		// TODO: get which direction player should be facing
-		var start:FlxPoint = findStartingPoint(room.universalStart);
+		var start:ExitPoint = findStartingPoint(room.universalStart);
 
-		_player = new Player(start.x, start.y, this, false);
+		_player = new Player(start.point.x, start.point.y, this, false, start.from == 'right');
 
 		add(_collisionLayer);
 		add(_player);
 		add(_blueFilter);
 		add(_filter);
 
+		if (room.type == 'outdoor') {
+			camera.setScrollBoundsRect(16, 16, _map.fullWidth - 32, GAME_HEIGHT);
+			FlxG.worldBounds.set(16, 16, _map.fullWidth - 32, GAME_HEIGHT);
+			camera.follow(_player);
+		}
+
 		worldStatus = false;
 		FlxTween.tween(_filter, { alpha: 0 }, 0.5, { onComplete: (_:FlxTween) -> {
 			worldStatus = null;
 		}});
-
-		if (room.type == 'outdoor') {
-			camera.setScrollBoundsRect(16, 16, GAME_WIDTH * 2, GAME_HEIGHT);
-			FlxG.worldBounds.set(16, 16, GAME_WIDTH * 2, GAME_HEIGHT);
-			camera.follow(_player);
-		}
 
 		if (FlxG.sound.defaultMusicGroup.sounds.length == 0) {
 			FlxG.sound.play(AssetPaths.crickets__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
@@ -146,49 +159,49 @@ class PlayState extends FlxState {
 		var xItemsOffset = 4;
 		var yItemsOffset = 4;
 
-		var map = new TiledMap(room.path);
+		_map = new TiledMap(room.path);
 
 		var _groundBackLayer = new FlxTilemap();
-		_groundBackLayer.loadMapFromArray(cast(map.getLayer('ground-back'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
-			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+		_groundBackLayer.loadMapFromArray(cast(_map.getLayer('ground-back'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
+			_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 			.setPosition(0, -yUpOffset);
 		add(_groundBackLayer);
 
-		if (map.getLayer('ground-middle') != null) {
+		if (_map.getLayer('ground-middle') != null) {
 			var _groundMiddleLayer = new FlxTilemap();
-			_groundMiddleLayer.loadMapFromArray(cast(map.getLayer('ground-middle'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
-				map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+			_groundMiddleLayer.loadMapFromArray(cast(_map.getLayer('ground-middle'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
+				_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 				.setPosition(0, -yUpOffset);
 			add(_groundMiddleLayer);
 		}
 		
 		var _backgroundLayer = new FlxTilemap();
-		_backgroundLayer.loadMapFromArray(cast(map.getLayer('background'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
-			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+		_backgroundLayer.loadMapFromArray(cast(_map.getLayer('background'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
+			_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 			.setPosition(0, -yUpOffset);
 		add(_backgroundLayer);
 
-		if (map.getLayer('items') != null) {
+		if (_map.getLayer('items') != null) {
 			var _itemsLayer = new FlxTilemap();
-			_itemsLayer.loadMapFromArray(cast(map.getLayer('items'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
-			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+			_itemsLayer.loadMapFromArray(cast(_map.getLayer('items'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
+			_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 			.setPosition(0, -yUpOffset);
 			
 			add(_itemsLayer);
 		}
 		
-		if (map.getLayer('items-angled-left') != null) {
+		if (_map.getLayer('items-angled-left') != null) {
 			var _itemsLayerAngledLeft = new FlxTilemap();
-			_itemsLayerAngledLeft.loadMapFromArray(cast(map.getLayer('items-angled-left'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
-				map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+			_itemsLayerAngledLeft.loadMapFromArray(cast(_map.getLayer('items-angled-left'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
+				_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 				.setPosition(0 + -xItemsOffset, 0 + yItemsOffset - yUpOffset);
 			add(_itemsLayerAngledLeft);
 		}
 
-		if (map.getLayer('items-angled-right') != null) {
+		if (_map.getLayer('items-angled-right') != null) {
 			var _itemsLayerAngledRight = new FlxTilemap();
-			_itemsLayerAngledRight.loadMapFromArray(cast(map.getLayer('items-angled-right'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
-				map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+			_itemsLayerAngledRight.loadMapFromArray(cast(_map.getLayer('items-angled-right'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
+				_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 				.setPosition(0 + xItemsOffset + 1, 0 + yItemsOffset - yUpOffset);
 			add(_itemsLayerAngledRight);
 		}
@@ -199,15 +212,15 @@ class PlayState extends FlxState {
 		}
 
 		_collisionLayer = new FlxTilemap();
-		_collisionLayer.loadMapFromArray(cast(map.getLayer('collision'), TiledTileLayer).tileArray, map.width, map.height, AssetPaths.tiles__png,
-			map.tileWidth, map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+		_collisionLayer.loadMapFromArray(cast(_map.getLayer('collision'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
+			_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 			.setPosition(0, collisionOutdoorYOffset - yUpOffset);
 		_collisionLayer.visible = false;
 
 
 		_hardExits = [];
-		if (map.getLayer('hard-exits') != null) {
-			var s = cast(map.getLayer('hard-exits'), TiledObjectLayer).objects;
+		if (_map.getLayer('hard-exits') != null) {
+			var s = cast(_map.getLayer('hard-exits'), TiledObjectLayer).objects;
 			s.map(item -> {
 				item.y -= yUpOffset;
 				_hardExits.push(item);
@@ -215,17 +228,26 @@ class PlayState extends FlxState {
 		}
 
 		_softExits = [];
-		if (map.getLayer('soft-exits') != null) {
-			var s = cast(map.getLayer('soft-exits'), TiledObjectLayer).objects;
+		if (_map.getLayer('soft-exits') != null) {
+			var s = cast(_map.getLayer('soft-exits'), TiledObjectLayer).objects;
 			s.map(item -> {
 				item.y -= yUpOffset;
-				_softExits.push(item);
+
+				var upArrow = new FlxSprite(item.x, item.y - 32, AssetPaths.up_arrow__png);
+				upArrow.visible = false;
+				FlxTween.tween(upArrow, { y: upArrow.y + 2 }, 1, { type: FlxTweenType.PINGPONG, ease: FlxEase.sineInOut });
+				add(upArrow);
+
+				_softExits.push({
+					spr: upArrow,
+					tiledObj: item
+				});
 			});
 		}
 
 		_hardCinematics = [];
-		if (map.getLayer('hard-cinematics') != null) {
-			var s = cast(map.getLayer('hard-cinematics'), TiledObjectLayer).objects;
+		if (_map.getLayer('hard-cinematics') != null) {
+			var s = cast(_map.getLayer('hard-cinematics'), TiledObjectLayer).objects;
 			s.map(item -> {
 				item.y -= yUpOffset;
 				_hardCinematics.push(item);
@@ -233,8 +255,8 @@ class PlayState extends FlxState {
 		}
 
 		_xCinematics = [];
-		if (map.getLayer('x-cinematics') != null) {
-			var s = cast(map.getLayer('x-cinematics'), TiledObjectLayer).objects;
+		if (_map.getLayer('x-cinematics') != null) {
+			var s = cast(_map.getLayer('x-cinematics'), TiledObjectLayer).objects;
 			s.map(item -> {
 				item.y -= yUpOffset;
 				_xCinematics.push(item);
@@ -242,8 +264,8 @@ class PlayState extends FlxState {
 		}
 
 		_items = new FlxTypedGroup<Item>();
-		if (map.getLayer('item-objects') != null) {
-			var s = cast(map.getLayer('item-objects'), TiledObjectLayer).objects;
+		if (_map.getLayer('item-objects') != null) {
+			var s = cast(_map.getLayer('item-objects'), TiledObjectLayer).objects;
 			s.map(item -> {
 				if (!GlobalState.instance.items.contains(item.name)) {
 					var _item = new Item(item.x, item.y, item.name);
@@ -256,8 +278,8 @@ class PlayState extends FlxState {
 
 		_npcs = [];
 		_thoughtBubbles = new FlxTypedGroup<ThoughtBubble>();
-		if (map.getLayer('npcs') != null) {
-			var s = cast(map.getLayer('npcs'), TiledObjectLayer).objects;
+		if (_map.getLayer('npcs') != null) {
+			var s = cast(_map.getLayer('npcs'), TiledObjectLayer).objects;
 			s.map(item -> {
 				var npcData:NPCData = NPCs.getNPC(item.name);
 				if (npcData.qualify()) {
@@ -291,9 +313,16 @@ class PlayState extends FlxState {
 			}
 		}
 
-		for (point in _softExits) {
-			if (point.name != 'start' && FlxG.keys.justPressed.UP && Math.abs(point.x - _player.x) < EXIT_DISTANCE && Math.abs(point.y - _player.y) < EXIT_DISTANCE) {
-				changeRoom(point.name);
+		for (softExit in _softExits) {
+			if (softExit.tiledObj.name != 'start' &&
+				Math.abs(softExit.tiledObj.x - _player.x) < SOFT_EXIT_DISTANCE && Math.abs(softExit.tiledObj.y - _player.y) < SOFT_EXIT_DISTANCE) {
+				softExit.spr.visible = true;
+
+				if (FlxG.keys.justPressed.UP) {
+					changeRoom(softExit.tiledObj.name);
+				}
+			} else {
+				softExit.spr.visible = false;
 			}
 		}
 
@@ -309,11 +338,9 @@ class PlayState extends FlxState {
 				GlobalState.instance.completedXCinematics.push(point.name);
 			}
 		}
-
-		// soft cinematics?
 	}
 
-	function findStartingPoint (universalStart:Bool):FlxPoint {
+	function findStartingPoint (universalStart:Bool):ExitPoint {
 		if (GlobalState.instance.fromWorld) {
 			var currentWorld = GlobalState.instance.currentWorld;
 			var startPoint:Null<FlxPoint> = null;
@@ -334,35 +361,47 @@ class PlayState extends FlxState {
 			GlobalState.instance.fromWorld = false;
 			GlobalState.instance.wonWorld = false;
 
-			return startPoint;
+			return { point: startPoint };
 		}
 
 		var roomName:Null<String> = GlobalState.instance.lastRoom;
+		trace(roomName);
+
+		for (h in _hardExits) {
+			if (h.name == roomName) {
+				var xDiff = 0;
+
+				var from = h.properties.get('from');
+				if (from == 'left') {
+					xDiff = FROM_EXIT_DISTANCE;
+				} else if (from == 'right') {
+					xDiff = -FROM_EXIT_DISTANCE;
+				}
+
+				return { point: new FlxPoint(h.x + xDiff, h.y), from: from };
+			}
+		}
+
+		// TODO: move duplicate loops to a different function
+		for (s in _softExits) {
+			if (s.tiledObj.name == roomName) {
+				var from = s.tiledObj.properties.get('from');
+				return { point: new FlxPoint(s.tiledObj.x, s.tiledObj.y), from: from };
+			}
+		}
 
 		if (roomName == null || universalStart) {
 			roomName = 'start';
 		}
 
-		for (h in _hardExits) {
-			if (h.name == roomName) {
-				var xDiff = 0;
-				if (h.properties.get('from') == 'left') {
-					xDiff = FROM_EXIT_DISTANCE;
-				} else if (h.properties.get('from') == 'right') {
-					xDiff = -FROM_EXIT_DISTANCE;
-				}
-
-				return new FlxPoint(h.x + xDiff, h.y);
-			}
-		}
-
 		for (s in _softExits) {
-			if (s.name == roomName) {
-				return new FlxPoint(s.x, s.y);
+			if (s.tiledObj.name == roomName) {
+				var from = s.tiledObj.properties.get('from');
+				return { point: new FlxPoint(s.tiledObj.x, s.tiledObj.y), from: from };
 			}
 		}
 
-		return new FlxPoint(0, 0);
+		return { point: new FlxPoint(0, 0) };
 	}
 
 	function overlapThoughtBubbles (bubble:ThoughtBubble, player:Player) {

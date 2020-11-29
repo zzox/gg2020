@@ -37,6 +37,26 @@ class Rooms {
                 darknessLevel: 0.2,
                 universalStart: true
             };
+            case 'downtown': return {
+                path: AssetPaths.downtown__tmx,
+                type: 'outdoor',
+                sounds: [0, 1],
+                darknessLevel: 0.5,
+                universalStart: true
+            };
+            case 'alley': return {
+                path: AssetPaths.alley__tmx,
+                type: 'room',
+                sounds: [0, 1],
+                darknessLevel: 0.7,
+                universalStart: true
+            };
+            case 'club-front': return {
+                path: AssetPaths.club_front__tmx,
+                type: 'outdoor',
+                sounds: [0, 1],
+                darknessLevel: 0.5
+            };
             default: return null;
         }
     }

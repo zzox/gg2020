@@ -57,7 +57,7 @@ class Player extends FlxSprite {
 	var airTime:Float;
 	static inline final AIR_TIME_BUFFER = 0.1;
 
-	public function new(x:Float, y:Float, scene:Dynamic, inThoughts:Bool) {
+	public function new(x:Float, y:Float, scene:Dynamic, inThoughts:Bool, fromRight:Bool) {
 		super(x, y);
 
 		loadGraphic(AssetPaths.ty__png, true, 16, 24);
@@ -97,6 +97,10 @@ class Player extends FlxSprite {
 
 		_scene = scene;
 		this.inThoughts = inThoughts;
+
+		if (fromRight) {
+			flipX = true;
+		}
 
 		addDrag();
 	}
