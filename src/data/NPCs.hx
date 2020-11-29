@@ -51,7 +51,14 @@ class NPCs {
                 graphic: AssetPaths.chris__png,
                 flipX: false,
                 follow: true,
-                qualify: () -> true,
+                qualify: () -> {
+                    var gs = GlobalState.instance;
+                    if (gs.currentRoom == 'downtown' && gs.chrisLeftForTickets) {
+                        return false;
+                    }
+
+                    return true;
+                },
                 canTalk: () -> true
             };
             case 'old-woman': return {

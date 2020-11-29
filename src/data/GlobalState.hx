@@ -14,6 +14,7 @@ class GlobalState {
 
     public var momIsSleeping:Bool = false;
     public var offeredJoyPills:Bool = false;
+    public var chrisLeftForTickets:Bool = false;
 
     private function new () {
         currentRoom = 'downtown';

@@ -97,6 +97,53 @@ class Cinematics {
 				type: 'text',
 				text: 'good one mom'
 			}];
+			case 'chris-tickets': return [{
+				type: 'text',
+				text: 'dude...'
+			}, {
+				type: 'text',
+				text: 'don\'t be mad...'
+			}, {
+				type: 'text',
+				text: 'i forgot the tickets!'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'i swear i\'ll make it up to you'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'you think we can find some?'
+			}, {
+				type: 'text',
+				text: 'let\'s split up!'
+			}, {
+				type: 'actions',
+				time: 2.0,
+				actions: [{
+					target: 'chris',
+					type: 'move-x',
+					to: { x: 265 }
+				}, {
+					target: 'chris',
+					type: 'flip-x',
+					flipX: false
+				}, {
+					target: 'chris',
+					type: 'anim',
+					anim: 'run'
+				}]
+			}, {
+				type: 'callback',
+				callback: () -> {
+					GlobalState.instance.chrisLeftForTickets = true;
+					return -1;
+				}
+			}];
 			// wins
 			case 'mom-thought-win': return [{
 				type: 'text',

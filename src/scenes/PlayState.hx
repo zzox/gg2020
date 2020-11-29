@@ -363,7 +363,6 @@ class PlayState extends FlxState {
 		}
 
 		var roomName:Null<String> = GlobalState.instance.lastRoom;
-		trace(roomName);
 
 		for (h in _hardExits) {
 			if (h.name == roomName) {
