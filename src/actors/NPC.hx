@@ -44,7 +44,7 @@ class NPC extends FlxSprite {
 		_scene = scene;
 
 		follow = npcData.follow;
-		flipX = npcData.flipX;
+		flipX = npcData.flipX();
 		canTalk = npcData.canTalk();
 
 		_upArrow = new FlxSprite(x - 4, y - 16, AssetPaths.up_arrow__png);
@@ -101,7 +101,7 @@ class NPC extends FlxSprite {
 		animation.add('walk', [1, 1, 0, 2, 2, 0], 7);
 		animation.add('run', [1, 1, 0, 2, 2, 0], 10);
 		animation.add('breathe', [0, 0, 0, 3, 4, 4, 3], 8);
-		animation.add('dance', [3, 3, 4, 5, 5, 6], 8);
+		animation.add('dance', [3, 4, 4, 5, 6, 6], 8);
 
 		var anim = 'stand';
 		if (npcData.forcedAnim != null) {

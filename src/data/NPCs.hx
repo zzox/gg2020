@@ -5,7 +5,7 @@ import haxe.Constraints.Function;
 typedef NPCData = {
     var graphic:String;
     var follow:Bool;
-    var flipX:Bool;
+    var flipX:Function;
     var qualify:Function;
     var canTalk:Function;
     var ?forcedAnim:String;
@@ -25,7 +25,7 @@ class NPCs {
             case 'mom': return {
                 graphic: AssetPaths.mom__png,
                 follow: true,
-                flipX: false,
+                flipX: () -> false,
                 qualify: () -> !GlobalState.instance.momIsSleeping,
                 canTalk: () -> false,
                 bubble: {
@@ -37,7 +37,7 @@ class NPCs {
             };
             case 'joy': return {
                 graphic: AssetPaths.joy__png,
-                flipX: true,
+                flipX: () -> true,
                 follow: false,
                 qualify: () -> true,
                 canTalk: () -> true,
@@ -57,7 +57,7 @@ class NPCs {
             };
             case 'chris': return {
                 graphic: AssetPaths.chris__png,
-                flipX: false,
+                flipX: () -> false,
                 follow: true,
                 qualify: () -> {
                     var gs = GlobalState.instance;
@@ -71,7 +71,13 @@ class NPCs {
             };
             case 'old-woman': return {
                 graphic: AssetPaths.old_woman__png,
-                flipX: true,
+                flipX: () -> {
+                    if (GlobalState.instance.currentRoom == 'dock') {
+                        return false;
+                    }
+
+                    return true;
+                },
                 follow: false,
                 canTalk: () -> true,
                 qualify: () -> true,
@@ -84,7 +90,7 @@ class NPCs {
             };
             case 'busdriver': return {
                 graphic: AssetPaths.busdriver__png,
-                flipX: false,
+                flipX: () -> false,
                 follow: false,
                 canTalk: () -> true,
                 qualify: () -> true,
@@ -97,7 +103,7 @@ class NPCs {
             };
             case 'bouncer-one': return {
                 graphic: AssetPaths.bouncer_one__png,
-                flipX: true,
+                flipX: () -> true,
                 follow: false,
                 canTalk: () -> true,
                 qualify: () -> true,
@@ -110,35 +116,35 @@ class NPCs {
             };
             case 'bouncer-two': return {
                 graphic: AssetPaths.bouncer_two__png,
-                flipX: false,
+                flipX: () -> false,
                 follow: false,
                 canTalk: () -> true,
                 qualify: () -> true
             };
             case 'creep-one': return {
                 graphic: AssetPaths.creep_one__png,
-                flipX: false,
+                flipX: () -> false,
                 follow: false,
                 canTalk: () -> true,
                 qualify: () -> true
             };
             case 'creep-two': return {
                 graphic: AssetPaths.creep_two__png,
-                flipX: true,
+                flipX: () -> true,
                 follow: false,
                 canTalk: () -> true,
                 qualify: () -> true
             };
             case 'dj-hellgirl': return {
                 graphic: AssetPaths.hellgirl__png,
-                flipX: false,
+                flipX: () -> false,
                 follow: true,
                 canTalk: () -> true,
                 qualify: () -> true
             };
             case 'dancing-woman': return {
                 graphic: AssetPaths.dancing_woman__png,
-                flipX: false,
+                flipX: () -> false,
                 follow: false,
                 canTalk: () -> true,
                 forcedAnim: 'dance',

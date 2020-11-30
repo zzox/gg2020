@@ -220,6 +220,12 @@ class Cinematics {
 				type: 'text',
 				text: 'i think i hear the bus coming'
 			}, {
+				type: 'callback',
+				callback: () -> {
+					GlobalState.instance.informedByOldWoman = true;
+					return 7;
+				}
+			}, {
 				type: 'room-change',
 				roomName: 'bus'
 			}];
@@ -273,6 +279,22 @@ class Cinematics {
 			}, {
 				type: 'item',
 				item: 'a beer'
+			}];
+			case 'dancing-woman-thought-win': return [{
+				type: 'text',
+				text: 'wow'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'i really should call my grandma'
+			}, {
+				type: 'callback',
+				callback: () -> {
+					GlobalState.instance.dancingWomanCalledGrandma = true;
+					return -1;
+				}
 			}];
 			// dialog
 			case 'chris-talk': return [{
@@ -401,12 +423,22 @@ class Cinematics {
 			case 'old-woman-talk': return [{
 				type: 'callback',
 				callback: () -> {
-					if (GlobalState.instance.currentRoom == 'bus') {
+					var inst = GlobalState.instance;
+					var room = inst.currentRoom;
+					if (room == 'bus') {
 						return 1;
 					}
 
-					if (GlobalState.instance.currentRoom == 'hometown') {
+					if (room == 'hometown') {
 						return 4;
+					}
+
+					if (room == 'dock') {
+						if (inst.dancingWomanCalledGrandma && !inst.items.contains('ten bucks')) {
+							return 14;
+						}
+
+						return 7;
 					}
 
 					return -1;
@@ -426,13 +458,118 @@ class Cinematics {
 			}, {
 				type: 'text',
 				text: 'kids out late can\'t be up to anything good'
+			}, {
+				type: 'callback',
+				callback: () -> -1
+			}, {
+				type: 'text',
+				text: 'sure is nice out here',
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'the sea air at night is unparalleled'
+			}, {
+				type: 'callback',
+				callback: () -> { 
+					if (!GlobalState.instance.informedByOldWoman) {
+						GlobalState.instance.informedByOldWoman = true;
+						return 11;
+					}
+
+					return -1;
+				}
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'i just wish my grandkids would call once in a while'
+			}, {
+				type: 'callback',
+				callback: () -> -1
+			}, {
+				type: 'text',
+				text: 'you would never guess who just called'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'that\'s right!'
+			}, {
+				type: 'text',
+				text: 'such a nice surprise'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'i overheard you and your friend talking about a concert?'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'oh, no'
+			}, {
+				type: 'text',
+				text: 'well here you go'
+			}, {
+				type: 'text',
+				text: 'and be kind to your folks will you?'
+			}, {
+				type: 'item',
+				item: 'ten bucks'
 			}];
 			case 'bouncer-one-talk': return [{
+				type: 'callback',
+				callback: () -> {
+					if (GlobalState.instance.currentRoom == 'bus') {
+						return 1;
+					}
+
+					return 3;
+				}
+			}, {
 				type: 'text',
 				text: '... ...'
 			}, {
 				type: 'text',
 				text: 'you can never be too cool for public transportation'
+			}, {
+				type: 'callback',
+				callback: () -> {
+					var gs = GlobalState.instance;
+					if (gs.currentRoom == 'bus') {
+						return -1;
+					}
+
+					if (gs.items.contains('money')) {
+						return 4;
+					}
+
+					return 7;
+				}
+			}, {
+				type: 'text',
+				text: 'ten bucks? enough for two tickets'
+			}, {
+				type: 'text',
+				text: 'right this way kid'
+			}, {
+				type: 'callback',
+				callback: () -> -1
+			}, {
+				type: 'text',
+				text: 'no ticket, no money, no entry'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'sorry kid'
 			}];
 			case 'bouncer-two-talk': return [{
 				type: 'text',

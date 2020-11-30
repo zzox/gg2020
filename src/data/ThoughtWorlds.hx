@@ -40,6 +40,12 @@ class ThoughtWorlds {
                 colors: [0xffffffff, 0xff024aca, 0xff151515],
                 itemGraphic: AssetPaths.pink_target__png
             };
+            case 'dancing-woman-thought': return {
+                tilemap: AssetPaths.thought_dancing_woman__tmx,
+                backgroundColor: 0xffa328b3,
+                colors: [0xffffffff, 0xff6a31ca, 0xff231712],
+                itemGraphic: AssetPaths.purple_target__png
+            };
             default: return null;
         }
     }
