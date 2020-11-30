@@ -7,6 +7,7 @@ typedef Cinematic = {
 	var ?text:String;
 	var ?callback:Function;
 	var ?roomName:String;
+	var ?item:String;
 	var ?actions:Array<Action>;
 	var ?time:Float;
 }
@@ -144,6 +145,22 @@ class Cinematics {
 					return -1;
 				}
 			}];
+			case 'back-room': return [{
+				type: 'callback',
+				callback: () -> {
+					if (GlobalState.instance.creepsAreInBack) {
+						return 1;
+					}
+
+					return 3;
+				}
+			}, {
+				type: 'room-change',
+				text: 'It\'s locked'
+			}, {
+				type: 'room-change',
+				roomName: 'back-room'
+			}];
 			// wins
 			case 'mom-thought-win': return [{
 				type: 'text',
@@ -231,6 +248,32 @@ class Cinematics {
 				type: 'room-change',
 				roomName: 'downtown'
 			}];
+			case 'busdriver-thought-win': return [{
+				type: 'text',
+				text: 'final stop, seaside city center'
+			}, {
+				type: 'text',
+				text: '...'
+			}, {
+				type: 'text',
+				text: 'man i love my job'
+			}, {
+				type: 'room-change',
+				roomName: 'downtown'
+			}];
+			case 'bouncer-one-thought-win': return [{
+				type: 'text',
+				text: 'you seem like a chill kid'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'take this'
+			}, {
+				type: 'item',
+				item: 'a beer'
+			}];
 			// dialog
 			case 'chris-talk': return [{
 				type: 'callback',
@@ -282,11 +325,20 @@ class Cinematics {
 			case 'joy-talk': return [{
 				type: 'callback',
 				callback: () -> {
-					if (GlobalState.instance.offeredJoyPills) {
-						return 3;
+					var gs = GlobalState.instance;
+					if (gs.currentRoom == 'hometown') {
+						if (GlobalState.instance.offeredJoyPills) {
+							return 3;
+						}
+
+						return 1;
 					}
 
-					return 1;
+					if (gs.creepsAreInBack) {
+						return 8;
+					}
+
+					return 11;
 				}
 			}, {
 				type: 'text',
@@ -315,6 +367,36 @@ class Cinematics {
 			}, {
 				type: 'text',
 				text: 'aren\'t you, like, too young to be going out?'
+			}, {
+				type: 'callback',
+				callback: () -> {
+					GlobalState.instance.offeredJoyPills = true;
+					return -1;
+				}
+			}, {
+				type: 'text',
+				text: 'damn, that\'s a lesson for you'
+			}, {
+				type: 'text',
+				text: 'become a musician'
+			}, {
+				type: 'callback',
+				callback: () -> {
+					GlobalState.instance.offeredJoyPills = true;
+					return -1;
+				}
+			}, {
+				type: 'text',
+				text: 'wow look at him'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'no, the tall one'
+			}, {
+				type: 'text',
+				text: 'should i talk to him?'
 			}];
 			case 'old-woman-talk': return [{
 				type: 'callback',
@@ -351,6 +433,17 @@ class Cinematics {
 			}, {
 				type: 'text',
 				text: 'you can never be too cool for public transportation'
+			}];
+			case 'bouncer-two-talk': return [{
+				type: 'text',
+				text: 'it\'s like, 8 pm'
+			}, {
+				type: 'text',
+				text: 'why are you at a show so early?'
+			}];
+			case 'dancing-woman-talk': return [{
+				type: 'text',
+				text: 'She\'s just dancing.',
 			}];
 			default: return null;
 		}

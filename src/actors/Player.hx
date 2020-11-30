@@ -28,6 +28,7 @@ class Player extends FlxSprite {
 	public var dashingTime:Float;
 	public var hasHitFloor:Bool;
 	public var frozen:Bool;
+	public var dead:Bool;
 	public var presenting:Bool;
 	public var launched:Bool;
 
@@ -73,6 +74,7 @@ class Player extends FlxSprite {
 		animation.add('dash', [6, 7, 7], 16);
 		animation.add('frozen', [4]);
 		animation.add('present', [10]);
+		animation.add('dead', [11]);
 
 		maxVelocity.set(100, 150);
 
@@ -85,6 +87,7 @@ class Player extends FlxSprite {
 		};
 
 		hurting = false;
+		dead = false;
 		jumping = false;
 		hasDashed = false;
 		hasHitFloor = false;
@@ -106,6 +109,15 @@ class Player extends FlxSprite {
 	}
 
 	override public function update (elapsed:Float) {
+		if (dead) {
+			velocity.set(0, 0);
+			acceleration.set(0, 0);
+			animation.play('dead');
+			super.update(elapsed);
+
+			return;
+		}
+
 		if (frozen) {
 			velocity.set(0, 0);
 			acceleration.set(0, 0);

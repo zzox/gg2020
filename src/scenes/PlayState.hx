@@ -142,7 +142,7 @@ class PlayState extends FlxState {
 		if (_cinematic == null && worldStatus == null) {
 			checkExits();
 			FlxG.overlap(_thoughtBubbles, _player, overlapThoughtBubbles);
-			FlxG.overlap(_items, _player, getItem);
+			FlxG.overlap(_items, _player, overlapItem);
 		}
 
 		FlxG.collide(_collisionLayer, _player);
@@ -403,6 +403,7 @@ class PlayState extends FlxState {
 
 	function overlapThoughtBubbles (bubble:ThoughtBubble, player:Player) {
 		if (player.hasHitFloor && !bubble.popped) {
+			trace(bubble.name);
 			_player.frozen = true;
 			FlxTween.tween(_filter, { alpha: 1 }, 0.5, { onComplete: (_:FlxTween) -> {
 				GlobalState.instance.currentWorld = bubble.name;
@@ -419,15 +420,18 @@ class PlayState extends FlxState {
 		}
 	}
 
-	function getItem (item:Item, player:Player) {
-		var name = item.name;
+	function overlapItem (item:Item, player:Player) {
+		getItem(item.name, player);
+		item.destroy();
+	}
+
+	function getItem (name:String, player:Player) {
 		var description = Item.getDescription(name);
 		GlobalState.instance.items.push(name);
 		worldStatus = true;
-		item.destroy();
 		player.presenting = true;
 
-		var _displayItem = new Item(player.x + 6, player.y - 8, name);
+		var _displayItem = new Item(player.x + 2, player.y - 12, name);
 		add(_displayItem);
 		_cinematic = [{
 			type: 'text',
@@ -477,6 +481,10 @@ class PlayState extends FlxState {
 				return;
 			case 'actions':
 				doActions(cin.actions, cin.time);
+			case 'item':
+				endCinematic();
+				getItem(cin.item, _player);
+				return;
 			default: null;
 		}
 

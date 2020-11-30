@@ -67,7 +67,7 @@
   </object>
  </objectgroup>
  <objectgroup id="13" name="hard-exits">
-  <object id="14" name="alley" x="20" y="91">
+  <object id="14" name="alley" x="18" y="91">
    <properties>
     <property name="from" value="left"/>
    </properties>

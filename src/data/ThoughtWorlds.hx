@@ -27,7 +27,19 @@ class ThoughtWorlds {
                 backgroundColor: 0xffa328b3,
                 colors: [0xffffffff, 0xff6a31ca, 0xff231712],
                 itemGraphic: AssetPaths.purple_target__png
-            }
+            };
+            case 'bouncer-one-thought': return {
+                tilemap: AssetPaths.thought_bouncer_one__tmx,
+                backgroundColor: 0xfff68f37,
+                colors: [0xffffffff, 0xff20b562, 0xff231712],
+                itemGraphic: AssetPaths.orange_target__png
+            };
+            case 'busdriver-thought': return {
+                tilemap: AssetPaths.thought_busdriver__tmx,
+                backgroundColor: 0xffff82ce,
+                colors: [0xffffffff, 0xff024aca, 0xff151515],
+                itemGraphic: AssetPaths.pink_target__png
+            };
             default: return null;
         }
     }

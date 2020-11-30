@@ -8,6 +8,7 @@ typedef NPCData = {
     var flipX:Bool;
     var qualify:Function;
     var canTalk:Function;
+    var ?forcedAnim:String;
     var ?bubble:Bubble;
 }
 
@@ -36,12 +37,19 @@ class NPCs {
             };
             case 'joy': return {
                 graphic: AssetPaths.joy__png,
-                flipX: false,
+                flipX: true,
                 follow: false,
                 qualify: () -> true,
                 canTalk: () -> true,
                 bubble: {
-                    qualify: () -> !GlobalState.instance.items.contains('pills'),
+                    qualify: () -> {
+                        var gs = GlobalState.instance;
+                        if (!gs.items.contains('pills') && gs.currentRoom == 'hometown') {
+                            return true;
+                        }
+
+                        return false;
+                    },
                     dir: 'right',
                     world: 'joy-thought',
                     background: AssetPaths.thought_background_purple__png
@@ -92,7 +100,13 @@ class NPCs {
                 flipX: true,
                 follow: false,
                 canTalk: () -> true,
-                qualify: () -> true
+                qualify: () -> true,
+                bubble: {
+                    qualify: () -> GlobalState.instance.currentRoom == 'bus',
+                    dir: 'left',
+                    world: 'bouncer-one-thought',
+                    background: AssetPaths.thought_background_orange__png
+                }
             };
             case 'bouncer-two': return {
                 graphic: AssetPaths.bouncer_two__png,
@@ -122,13 +136,26 @@ class NPCs {
                 canTalk: () -> true,
                 qualify: () -> true
             };
-            // case 'dancing-woman': return {
-            //     graphic: AssetPaths.dancing_woman__png,
-            //     flipX: false,
-            //     follow: false,
-            //     canTalk: () -> false,
-            //     qualify: () -> true
-            // };
+            case 'dancing-woman': return {
+                graphic: AssetPaths.dancing_woman__png,
+                flipX: false,
+                follow: false,
+                canTalk: () -> true,
+                forcedAnim: 'dance',
+                qualify: () -> !GlobalState.instance.dancingWomanCalledGrandma,
+                bubble: {
+                    qualify: () -> {
+                        if (GlobalState.instance.informedByOldWoman) {
+                            return true;
+                        }
+
+                        return false;
+                    },
+                    dir: 'left',
+                    world: 'dancing-woman-thought',
+                    background: AssetPaths.thought_background_pink__png
+                }
+            };
             default: return null;
         }
     }

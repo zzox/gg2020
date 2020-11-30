@@ -14,6 +14,8 @@ class Item extends FlxSprite {
 
         animation.add('pills', [0]);
         animation.add('tickets', [1]);
+        animation.add('a beer', [2]);
+        animation.add('ten bucks', [2]);
 
         animation.play(name);
         this.name = name;
@@ -23,6 +25,8 @@ class Item extends FlxSprite {
         switch (name) {
             case 'pills': return 'You use these for studying.';
             case 'tickets': return 'Finally!';
+            case 'a beer': return 'But you don\'t drink...';
+            case 'ten bucks': return 'Enough for two tickets!';
             default: return '';
         }
     }

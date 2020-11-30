@@ -36,6 +36,7 @@ class ThoughtState extends FlxState {
 
 	var _trampolines:FlxTypedGroup<FlxSprite>;
 	var _hitItems:FlxTypedGroup<HitItem>;
+	var _spikes:FlxTypedGroup<FlxSprite>;
 	var itemsRemain:Int;
 
 	var _filter:FlxSprite;
@@ -81,6 +82,7 @@ class ThoughtState extends FlxState {
 
 		FlxG.collide(_collisionLayer, _player);
 		FlxG.collide(_trampolines, _player, collideTrampolines);
+		FlxG.collide(_spikes, _player, collideSpikes);
 		FlxG.overlap(_hitItems, _player, hitItem);
 	}
 
@@ -93,6 +95,12 @@ class ThoughtState extends FlxState {
 			FlxTween.tween(player.maxVelocity, { y: 150 }, 1.0, { ease: FlxEase.quartIn, onComplete: (_:FlxTween) -> {
 				player.launched = false;
 			}});
+		}
+	}
+
+	function collideSpikes (spike:FlxSprite, player:Player) {
+		if (player.isTouching(FlxObject.DOWN) && !player.isTouching(FlxObject.LEFT) && !player.isTouching(FlxObject.RIGHT)) {
+			loseLevel(true);
 		}
 	}
 
@@ -158,8 +166,20 @@ class ThoughtState extends FlxState {
 				_trampolines.add(trampoline);
 			});
 		}
-
 		add(_trampolines);
+
+		_spikes = new FlxTypedGroup<FlxSprite>();
+		if (_map.getLayer('spikes') != null) {
+			var spikes = cast(_map.getLayer('spikes'), TiledObjectLayer).objects;
+			spikes.map(t -> {
+				var spike = new FlxSprite(t.x, t.y + yUpOffset + platformYOffset, AssetPaths.spike__png);
+				spike.setSize(12, 4);
+				spike.offset.set(6, 6);
+				spike.immovable = true;
+				_spikes.add(spike);
+			});
+		}
+		add(_spikes);
 
 		itemsRemain = items.length;
 
@@ -180,9 +200,13 @@ class ThoughtState extends FlxState {
 		FlxTween.tween(_filter, { alpha: 1 }, 0.66, { onComplete: exitLevel });
 	}
 
-	function loseLevel () {
+	function loseLevel (dead:Bool = false) {
 		worldStatus = true;
-		_player.frozen = true;
+		if (dead) {
+			_player.dead = true;
+		} else {
+			_player.frozen = true;
+		}
 		FlxTween.tween(_filter, { alpha: 1 }, 0.66, { onComplete: exitLevel });
 	}
 

@@ -15,9 +15,12 @@ class GlobalState {
     public var momIsSleeping:Bool = false;
     public var offeredJoyPills:Bool = false;
     public var chrisLeftForTickets:Bool = false;
+    public var informedByOldWoman:Bool = false;
+    public var dancingWomanCalledGrandma:Bool = false;
+    public var creepsAreInBack:Bool = false;
 
     private function new () {
-        currentRoom = 'downtown';
+        currentRoom = 'ty-room';
         lastRoom = null;
         currentWorld = null;
     }
