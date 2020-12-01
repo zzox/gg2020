@@ -3,6 +3,7 @@ package actors;
 import flixel.FlxObject;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.system.FlxSound;
 
 typedef HoldsObj = {
 	var left:Float;
@@ -58,6 +59,12 @@ class Player extends FlxSprite {
 	var airTime:Float;
 	static inline final AIR_TIME_BUFFER = 0.1;
 
+	var _jumpSound:FlxSound;
+	var _landSound:FlxSound;
+	var _dashSound:FlxSound;
+
+	var prevTouchingFloor:Null<Bool> = null;
+
 	public function new(x:Float, y:Float, scene:Dynamic, inThoughts:Bool, fromRight:Bool) {
 		super(x, y);
 
@@ -106,6 +113,10 @@ class Player extends FlxSprite {
 		}
 
 		addDrag();
+
+		_jumpSound = FlxG.sound.load(AssetPaths.jump__wav, 0.5);
+		_landSound = FlxG.sound.load(AssetPaths.land__wav, 0.25);
+		_dashSound = FlxG.sound.load(AssetPaths.dash__wav, 0.5);
 	}
 
 	override public function update (elapsed:Float) {
@@ -218,6 +229,7 @@ class Player extends FlxSprite {
 				&& dashingTime < 0 && !_scene.justSubmitted) {
 				jumping = true;
 				jumpTime = JUMP_START_TIME;
+				_jumpSound.play();
 			}
 
 			if (jumping) {
@@ -230,6 +242,7 @@ class Player extends FlxSprite {
 			}
 
 			if (dashPressed && dashingTime < 0 && !hasDashed && hurtTime <= 0.0 && inThoughts) {
+				_dashSound.play();
 				dashingTime = DASH_TIME;
 				hasDashed = true;
 			}
@@ -263,6 +276,12 @@ class Player extends FlxSprite {
 		} else {
 			airTime += elapsed;
 		}
+
+		if (touchingFloor && prevTouchingFloor == false && !launched) {
+			_landSound.play();
+		}
+
+		prevTouchingFloor = touchingFloor;
 
 		handleDash();
 		handleAnimation(touchingFloor);

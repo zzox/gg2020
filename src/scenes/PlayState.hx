@@ -77,6 +77,7 @@ class PlayState extends FlxState {
 	public var justSubmitted:Bool = false;
 
 	var _bgSound:FlxSound;
+	var _doorSound:FlxSound;
 
 	override public function create() {
 		super.create();
@@ -142,6 +143,8 @@ class PlayState extends FlxState {
 
 			FlxTween.tween(sound, { volume: vol }, 1.5);
 		}
+
+		_doorSound = FlxG.sound.load(AssetPaths.door__wav);
 	}
 
 	override public function update(elapsed:Float) {		
@@ -451,6 +454,7 @@ class PlayState extends FlxState {
 
 	function changeRoom (name:String) {
 		worldStatus = true;
+		_doorSound.play();
 		FlxTween.tween(_filter, { alpha: 1 }, LEAVE_TIME, { onComplete: (_:FlxTween) -> {
 			GlobalState.instance.lastRoom = GlobalState.instance.currentRoom;
 			GlobalState.instance.currentRoom = name;

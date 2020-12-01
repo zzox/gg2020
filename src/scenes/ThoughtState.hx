@@ -44,7 +44,12 @@ class ThoughtState extends FlxState {
 
 	var worldStatus:Null<Bool> = null;
 
-    var sound:FlxSound;
+	var sound:FlxSound;
+
+	var _spikeSound:FlxSound;
+	var _hitItemSound:FlxSound;
+	var _fallSound:FlxSound;
+	var _trampolineSound:FlxSound;
 
 	override public function create() {
 		super.create();
@@ -74,14 +79,20 @@ class ThoughtState extends FlxState {
 		FlxG.worldBounds.set(0, 0, _map.fullWidth, GAME_HEIGHT);
 		camera.follow(_player);
 
+		_spikeSound = FlxG.sound.load(AssetPaths.spike_die__wav);
+		_hitItemSound = FlxG.sound.load(AssetPaths.hit_item__wav);
+		_fallSound = FlxG.sound.load(AssetPaths.fall__wav, 0.5);
+		_trampolineSound = FlxG.sound.load(AssetPaths.trampoline__wav, 0.5);
+
 		sound = FlxG.sound.play(world.song, 0, true);
-        FlxTween.tween(sound, { volume: 1 }, 0.5);
+        FlxTween.tween(sound, { volume: 0.5 }, 0.5);
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
 
 		if (_player.y > GAME_HEIGHT + GAME_HEIGHT_DIFF && worldStatus == null) {
+			_fallSound.play();
 			loseLevel();
 		}
 
@@ -96,6 +107,7 @@ class ThoughtState extends FlxState {
 			trampoline.animation.play('bounce');
 			player.maxVelocity.y = LAUNCH_VELOCITY;
 			player.velocity.y = -LAUNCH_VELOCITY;
+			_trampolineSound.play();
 			player.launched = true;
 			FlxTween.tween(player.maxVelocity, { y: 150 }, 1.0, { ease: FlxEase.quartIn, onComplete: (_:FlxTween) -> {
 				player.launched = false;
@@ -104,8 +116,9 @@ class ThoughtState extends FlxState {
 	}
 
 	function collideSpikes (spike:FlxSprite, player:Player) {
-		if (player.isTouching(FlxObject.DOWN) && !player.isTouching(FlxObject.LEFT) && !player.isTouching(FlxObject.RIGHT)) {
+		if (player.isTouching(FlxObject.DOWN) && !player.isTouching(FlxObject.LEFT) && !player.isTouching(FlxObject.RIGHT) && !worldStatus) {
 			loseLevel(true);
+			_spikeSound.play();
 		}
 	}
 
@@ -113,6 +126,7 @@ class ThoughtState extends FlxState {
 		if (!item.hit) {
 			item.hitMe();
 			itemsRemain -= 1;
+			_hitItemSound.play();
 
 			if (itemsRemain == 0) {
 				winLevel();

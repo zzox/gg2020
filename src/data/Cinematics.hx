@@ -259,7 +259,7 @@ class Cinematics {
 				text: 'final stop, seaside city center'
 			}, {
 				type: 'text',
-				text: '...'
+				text: '... ...'
 			}, {
 				type: 'text',
 				text: 'man i love my job'

@@ -101,7 +101,7 @@ class NPC extends FlxSprite {
 		animation.add('walk', [1, 1, 0, 2, 2, 0], 7);
 		animation.add('run', [1, 1, 0, 2, 2, 0], 10);
 		animation.add('breathe', [0, 0, 0, 3, 4, 4, 3], 8);
-		animation.add('dance', [3, 4, 4, 5, 6, 6], 8);
+		animation.add('dance', [3, 4, 4, 5, 6, 6], 7);
 
 		var anim = 'stand';
 		if (npcData.forcedAnim != null) {

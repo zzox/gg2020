@@ -5,11 +5,14 @@ import flash.geom.Rectangle;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.graphics.frames.FlxBitmapFont;
 import flixel.group.FlxGroup;
+import flixel.system.FlxSound;
 import flixel.text.FlxBitmapText;
 import haxe.Constraints.Function;
 import openfl.Assets;
 
 class Dialog extends FlxGroup {
+    static inline final TEXT_COLOR = 0xff151515;
+
     public var open:Bool;
     var onComplete:Function;
 
@@ -22,7 +25,8 @@ class Dialog extends FlxGroup {
     var text:String;
     var halted:Bool;
 
-    static inline final TEXT_COLOR = 0xff151515;
+    var _letterSound:FlxSound;
+    var _letterClearSound:FlxSound;
 
     public function new (onComplete:Function, text:String) {       
         super();
@@ -53,6 +57,9 @@ class Dialog extends FlxGroup {
         this.text = text;
         open = true;
 
+        _letterSound = FlxG.sound.load(AssetPaths.letter__wav, 0.75);
+		_letterClearSound = FlxG.sound.load(AssetPaths.letter_clear__wav, 0.75);
+
         add(bg);
         add(_textLine);
     }
@@ -64,18 +71,22 @@ class Dialog extends FlxGroup {
 
         if (!halted) {
             if (FlxG.keys.anyJustPressed([X, Z, SPACE])) {
+                _letterClearSound.play();
                 fill();
             } else {   
                 textTime += elapsed;
 
                 if (textTime > stepTime) {
                     textTime -= stepTime;
-
+                    if (!_letterSound.playing) {
+                        _letterSound.play();
+                    }
                     addLetter();
                 }
             }
         } else {
             if (FlxG.keys.anyJustPressed([X, Z, SPACE])) {
+                _letterClearSound.play();
                 end();
             }
         }
