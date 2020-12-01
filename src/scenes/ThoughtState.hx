@@ -1,5 +1,6 @@
 package scenes;
 
+import flixel.system.FlxSound;
 import actors.Player;
 import data.Cinematics.Cinematic;
 import data.ThoughtWorlds;
@@ -43,12 +44,13 @@ class ThoughtState extends FlxState {
 
 	var worldStatus:Null<Bool> = null;
 
+    var sound:FlxSound;
+
 	override public function create() {
 		super.create();
 
 		FlxG.mouse.visible = false;
 
-		// remove vvv when going live
 		FlxG.scaleMode = new PixelPerfectScaleMode();
 
 		// camera.followLerp = 0.5;
@@ -71,6 +73,9 @@ class ThoughtState extends FlxState {
 		camera.setScrollBoundsRect(0, 0, _map.fullWidth, GAME_HEIGHT);
 		FlxG.worldBounds.set(0, 0, _map.fullWidth, GAME_HEIGHT);
 		camera.follow(_player);
+
+		sound = FlxG.sound.play(world.song, 0, true);
+        FlxTween.tween(sound, { volume: 1 }, 0.5);
 	}
 
 	override public function update(elapsed:Float) {
@@ -198,6 +203,7 @@ class ThoughtState extends FlxState {
 		worldStatus = true;
 		_player.frozen = true;
 		FlxTween.tween(_filter, { alpha: 1 }, 0.66, { onComplete: exitLevel });
+		FlxTween.tween(sound, { volume: 0 }, 0.65);
 	}
 
 	function loseLevel (dead:Bool = false) {
@@ -208,6 +214,7 @@ class ThoughtState extends FlxState {
 			_player.frozen = true;
 		}
 		FlxTween.tween(_filter, { alpha: 1 }, 0.66, { onComplete: exitLevel });
+		FlxTween.tween(sound, { volume: 0 }, 0.65);
 	}
 
 	function exitLevel (_:FlxTween) {

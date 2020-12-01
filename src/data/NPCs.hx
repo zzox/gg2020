@@ -65,6 +65,10 @@ class NPCs {
                         return false;
                     }
 
+                    if (gs.currentRoom == 'club-front' && !gs.items.contains('ten bucks')) {
+                        return false;
+                    }
+
                     return true;
                 },
                 canTalk: () -> true

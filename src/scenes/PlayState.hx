@@ -28,6 +28,7 @@ import flixel.tile.FlxTilemap;
 import flixel.tile.FlxBaseTilemap.FlxTilemapAutoTiling;
 import objects.Dialog;
 import scenes.ThoughtState;
+import scenes.EndState;
 
 typedef SoftExit = {
 	var tiledObj:TiledObject;
@@ -46,6 +47,7 @@ class PlayState extends FlxState {
 	static inline final SOFT_EXIT_DISTANCE = 12;
 	static inline final FROM_EXIT_DISTANCE = 8;
 	static inline final LEAVE_TIME = 0.5;
+	static inline final END_TIME = 2.0;
 
 	var _map:TiledMap;
 	var _collisionLayer:FlxTilemap;
@@ -118,7 +120,13 @@ class PlayState extends FlxState {
 
 		if (FlxG.sound.defaultMusicGroup.sounds.length == 0) {
 			FlxG.sound.play(AssetPaths.crickets__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
-			FlxG.sound.play(AssetPaths.theme1__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.bus__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.waves__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.low_synth__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.hi_synth__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.percs_bus__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.percs_cafe__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.club_front__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
 		}
 
 		// need to use integers for now, since I don't know how to
@@ -403,20 +411,13 @@ class PlayState extends FlxState {
 
 	function overlapThoughtBubbles (bubble:ThoughtBubble, player:Player) {
 		if (player.hasHitFloor && !bubble.popped) {
-			trace(bubble.name);
 			_player.frozen = true;
 			FlxTween.tween(_filter, { alpha: 1 }, 0.5, { onComplete: (_:FlxTween) -> {
 				GlobalState.instance.currentWorld = bubble.name;
 				FlxG.switchState(new ThoughtState());
 			}});
 
-			for (i in 0...FlxG.sound.defaultMusicGroup.sounds.length) {
-				var sound = FlxG.sound.defaultMusicGroup.sounds[i];
-				FlxTween.tween(sound, { volume: 0 }, LEAVE_TIME, { onComplete: (_:FlxTween) -> {
-					FlxG.sound.defaultMusicGroup.remove(sound);
-					sound.destroy();
-				}});
-			}
+			fadeSounds(0.5);
 		}
 	}
 
@@ -457,6 +458,14 @@ class PlayState extends FlxState {
 		}});
 	}
 
+	function endGame () {
+		worldStatus = true;
+		fadeSounds(1.0);
+		FlxTween.tween(_filter, { alpha: 1 }, END_TIME, { onComplete: (_:FlxTween) -> {
+			FlxG.switchState(new EndState());
+		}});
+	}
+
 	public function launchCinematic (name:String) {
 		_cinematic = Cinematics.getCinematic(name);
 		doCinematic();
@@ -485,6 +494,9 @@ class PlayState extends FlxState {
 				endCinematic();
 				getItem(cin.item, _player);
 				return;
+			case 'end':
+				endGame();
+				endCinematic();
 			default: null;
 		}
 
@@ -554,5 +566,17 @@ class PlayState extends FlxState {
 			}
 			return npc;
 		});
+	}
+
+	function fadeSounds (time:Float) {
+		for (i in 0...FlxG.sound.defaultMusicGroup.sounds.length) {
+			var sound = FlxG.sound.defaultMusicGroup.sounds[i];
+			trace(sound);
+			if (sound != null) {
+				sound.persist = false;
+				FlxTween.tween(sound, { volume: 0 }, time);
+				// FlxG.sound.defaultMusicGroup.remove(sound);
+			}
+		}
 	}
 }

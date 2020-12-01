@@ -290,6 +290,22 @@ class Cinematics {
 				type: 'text',
 				text: 'i really should call my grandma'
 			}, {
+				type: 'actions',
+				time: 1.25,
+				actions: [{
+					target: 'dancing-woman',
+					type: 'move-x',
+					to: { x: -16 }
+				}, {
+					target: 'dancing-woman',
+					type: 'flip-x',
+					flipX: true
+				}, {
+					target: 'dancing-woman',
+					type: 'anim',
+					anim: 'run'
+				}]
+			}, {
 				type: 'callback',
 				callback: () -> {
 					GlobalState.instance.dancingWomanCalledGrandma = true;
@@ -300,12 +316,17 @@ class Cinematics {
 			case 'chris-talk': return [{
 				type: 'callback',
 				callback: () -> {
-					if (GlobalState.instance.currentRoom == 'bus') {
+					var room = GlobalState.instance.currentRoom;
+					if (room == 'bus') {
 						return 1;
 					}
 
-					if (GlobalState.instance.currentRoom == 'hometown') {
+					if (room == 'hometown') {
 						return 4;
+					}
+
+					if (room == 'club-front') {
+						return 11;
 					}
 
 					return -1;
@@ -339,10 +360,27 @@ class Cinematics {
 				}
 			}, {
 				type: 'text',
-				text: 'maybe you can give her some of your study meds'
+				text: 'you can offer her some of your study meds'
 			}, {
 				type: 'text',
 				text: 'you never take them anyway'
+			}, {
+				type: 'callback',
+				callback: () -> -1
+			}, {
+				type: 'text',
+				text: 'i couldn\'t find any...'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'YOU FOUND SOME?'
+			}, {
+				type: 'text',
+				text: 'LETS DO THIS!'
+			}, {
+				type: 'end'
 			}];
 			case 'joy-talk': return [{
 				type: 'callback',
@@ -506,7 +544,7 @@ class Cinematics {
 				text: '... ...'
 			}, {
 				type: 'text',
-				text: 'i overheard you and your friend talking about a concert?'
+				text: 'i overheard your friend talking about a concert?'
 			}, {
 				type: 'text',
 				text: '... ...'
@@ -546,7 +584,7 @@ class Cinematics {
 						return -1;
 					}
 
-					if (gs.items.contains('money')) {
+					if (gs.items.contains('ten bucks')) {
 						return 4;
 					}
 
@@ -557,7 +595,7 @@ class Cinematics {
 				text: 'ten bucks? enough for two tickets'
 			}, {
 				type: 'text',
-				text: 'right this way kid'
+				text: 'your friend coming with? he\'s been bothering me'
 			}, {
 				type: 'callback',
 				callback: () -> -1
