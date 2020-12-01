@@ -18,6 +18,8 @@ class GlobalState {
     public var informedByOldWoman:Bool;
     public var dancingWomanCalledGrandma:Bool;
     public var creepsAreInBack:Bool;
+    public var creepsScaredOff:Bool;
+    public var talkedToHellgirl:Bool;
 
     private function new () {
         restart();
@@ -40,5 +42,7 @@ class GlobalState {
         informedByOldWoman = false;
         dancingWomanCalledGrandma = false;
         creepsAreInBack = false;
+        creepsScaredOff = false;
+        talkedToHellgirl = false;
     }
 }

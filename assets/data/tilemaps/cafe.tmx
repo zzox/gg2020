@@ -88,7 +88,7 @@
    </properties>
    <point/>
   </object>
-  <object id="14" name="back-room" x="24" y="83">
+  <object id="14" name="back-room" x="20" y="83">
    <properties>
     <property name="from" value="left"/>
    </properties>
@@ -102,7 +102,7 @@
   <object id="12" name="creep-two" x="124" y="72">
    <point/>
   </object>
-  <object id="13" name="dj-hellgirl" x="58" y="76">
+  <object id="13" name="hellgirl" x="58" y="74">
    <point/>
   </object>
   <object id="17" name="joy" x="160" y="68">

@@ -102,6 +102,8 @@ class NPC extends FlxSprite {
 		animation.add('run', [1, 1, 0, 2, 2, 0], 10);
 		animation.add('breathe', [0, 0, 0, 3, 4, 4, 3], 8);
 		animation.add('dance', [3, 4, 4, 5, 6, 6], 7);
+		animation.add('drink', [3, 3, 4], 9);
+		animation.add('kiss', [3]);
 
 		var anim = 'stand';
 		if (npcData.forcedAnim != null) {
@@ -122,7 +124,7 @@ class NPC extends FlxSprite {
 
 		_upArrow.x = x - 4;
 
-		if (Math.abs(_scene._player.x - x) < TALK_DISTANCE && canTalk && _scene._cinematic == null) {
+		if (visible && Math.abs(_scene._player.x - x) < TALK_DISTANCE && canTalk && _scene._cinematic == null) {
 			_upArrow.visible = true;
 			if (FlxG.keys.justPressed.UP) {
 				_scene.launchCinematic('$name-talk');

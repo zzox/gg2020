@@ -65,7 +65,7 @@ class NPCs {
                         return false;
                     }
 
-                    if (gs.currentRoom == 'club-front' && !gs.items.contains('ten bucks')) {
+                    if (gs.currentRoom == 'club-front' && (!gs.items.contains('ten bucks') && !gs.items.contains('tickets'))) {
                         return false;
                     }
 
@@ -84,7 +84,14 @@ class NPCs {
                 },
                 follow: false,
                 canTalk: () -> true,
-                qualify: () -> true,
+                qualify: () -> {
+                    var gs = GlobalState.instance;
+                    if (gs.currentRoom == 'dock' && gs.creepsScaredOff) {
+                        return false;
+                    }
+
+                    return true;
+                },
                 bubble: {
                     qualify: () -> GlobalState.instance.currentRoom == 'hometown',
                     dir: 'left',
@@ -129,22 +136,74 @@ class NPCs {
                 graphic: AssetPaths.creep_one__png,
                 flipX: () -> false,
                 follow: false,
-                canTalk: () -> true,
-                qualify: () -> true
+                canTalk: () -> GlobalState.instance.currentRoom == 'cafe',
+                qualify: () -> {
+                    var gs = GlobalState.instance;
+                    if (gs.currentRoom == 'cafe' && gs.creepsAreInBack) {
+                        return false;
+                    }
+
+                    if (gs.currentRoom == 'back-room' && (!gs.creepsAreInBack || gs.creepsScaredOff)) {
+                        return false;
+                    }
+
+                    return true;
+                },
+                bubble: {
+                    qualify: () -> {
+                        var gs = GlobalState.instance;
+                        return gs.currentRoom == 'cafe' && gs.items.contains('a beer');
+                    },
+                    dir: 'left',
+                    world: 'creep-one-thought',
+                    background: AssetPaths.thought_background_purple__png
+                }
             };
             case 'creep-two': return {
                 graphic: AssetPaths.creep_two__png,
                 flipX: () -> true,
                 follow: false,
-                canTalk: () -> true,
-                qualify: () -> true
+                canTalk: () -> GlobalState.instance.currentRoom == 'cafe',
+                qualify: () -> {
+                    var gs = GlobalState.instance;
+                    if (gs.currentRoom == 'cafe' && gs.creepsAreInBack) {
+                        return false;
+                    }
+
+                    if (gs.currentRoom == 'back-room' && (!gs.creepsAreInBack || gs.creepsScaredOff)) {
+                        return false;
+                    }
+
+                    return true;
+                },
+                bubble: {
+                    qualify: () -> return GlobalState.instance.currentRoom == 'back-room',
+                    dir: 'left',
+                    world: 'creep-two-thought',
+                    background: AssetPaths.thought_background_pink__png
+                }
             };
-            case 'dj-hellgirl': return {
+            case 'hellgirl': return {
                 graphic: AssetPaths.hellgirl__png,
                 flipX: () -> false,
                 follow: true,
-                canTalk: () -> true,
-                qualify: () -> true
+                canTalk: () -> GlobalState.instance.currentRoom == 'cafe' || GlobalState.instance.currentRoom == 'dock',
+                qualify: () -> {
+                    var gs = GlobalState.instance;
+                    if (gs.currentRoom == 'cafe' && gs.creepsAreInBack) {
+                        return false;
+                    }
+
+                    if (gs.currentRoom == 'back-room' && gs.creepsAreInBack && gs.creepsScaredOff) {
+                        return false;
+                    }
+
+                    if (gs.currentRoom == 'dock' && (gs.items.contains('tickets') || !gs.creepsScaredOff)) {
+                        return false;
+                    }
+
+                    return true;
+                }
             };
             case 'dancing-woman': return {
                 graphic: AssetPaths.dancing_woman__png,

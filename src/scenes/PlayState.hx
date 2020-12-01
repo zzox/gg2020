@@ -464,7 +464,7 @@ class PlayState extends FlxState {
 
 	function endGame () {
 		worldStatus = true;
-		fadeSounds(1.0);
+		fadeSounds(2.0);
 		FlxTween.tween(_filter, { alpha: 1 }, END_TIME, { onComplete: (_:FlxTween) -> {
 			FlxG.switchState(new EndState());
 		}});
@@ -575,7 +575,7 @@ class PlayState extends FlxState {
 	function fadeSounds (time:Float) {
 		for (i in 0...FlxG.sound.defaultMusicGroup.sounds.length) {
 			var sound = FlxG.sound.defaultMusicGroup.sounds[i];
-			trace(sound);
+			// TODO: rework
 			if (sound != null) {
 				sound.persist = false;
 				FlxTween.tween(sound, { volume: 0 }, time);

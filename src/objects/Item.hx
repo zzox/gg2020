@@ -24,7 +24,7 @@ class Item extends FlxSprite {
     static public function getDescription (name:String) {
         switch (name) {
             case 'pills': return 'You use these for studying.';
-            case 'tickets': return 'Finally!';
+            case 'tickets': return 'Chris will be so pumped!';
             case 'a beer': return 'But you don\'t drink...';
             case 'ten bucks': return 'Enough for two tickets!';
             default: return '';

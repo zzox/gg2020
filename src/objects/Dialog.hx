@@ -57,8 +57,8 @@ class Dialog extends FlxGroup {
         this.text = text;
         open = true;
 
-        _letterSound = FlxG.sound.load(AssetPaths.letter__wav, 0.75);
-		_letterClearSound = FlxG.sound.load(AssetPaths.letter_clear__wav, 0.75);
+        _letterSound = FlxG.sound.load(AssetPaths.letter__wav, 0.5);
+		_letterClearSound = FlxG.sound.load(AssetPaths.letter_clear__wav, 0.5);
 
         add(bg);
         add(_textLine);

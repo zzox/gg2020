@@ -312,6 +312,217 @@ class Cinematics {
 					return -1;
 				}
 			}];
+			case 'creep-one-thought-win': return [{
+				type: 'text',
+				text: 'i should definitely talk to her'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'lemme see that beer kid'
+			}, {
+				type: 'actions',
+				time: 2.0,
+				actions: [{
+					target: 'creep-one',
+					type: 'anim',
+					anim: 'drink'
+				}]
+			}, {
+				type: 'actions',
+				time: 1.0,
+				actions: [{
+					target: 'creep-one',
+					type: 'anim',
+					anim: 'run'
+				}, {
+					target: 'creep-one',
+					type: 'move-x',
+					to: { x: 72 }
+				}, {
+					target: 'creep-one',
+					type: 'flip-x',
+					flipX: true
+				}]
+			}, {
+				type: 'actions',
+				time: 2.0,
+				actions: [{
+					target: 'creep-one',
+					type: 'anim',
+					anim: 'stand'
+				}]
+			}, {
+				type: 'actions',
+				time: 2.0,
+				actions: [{
+					target: 'creep-one',
+					type: 'move-x',
+					to: { x: 20 },
+				}, {
+					target: 'creep-one',
+					type: 'anim',
+					anim: 'run'
+				}]
+			}, {
+				type: 'actions',
+				time: 0,
+				actions: [{
+					target: 'creep-one',
+					type: 'visibility',
+					visibility: false
+				}]
+			}, {
+				type: 'actions',
+				time: 1.5,
+				actions: [{
+					target: 'hellgirl',
+					type: 'move-x',
+					to: { x: 20 }
+				}, {
+					target: 'hellgirl',
+					type: 'flip-x',
+					flipX: true
+				}, {
+					target: 'hellgirl',
+					type: 'anim',
+					anim: 'run'
+				}]
+			}, {
+				type: 'actions',
+				time: 3.0,
+				actions: [{
+					target: 'hellgirl',
+					type: 'visibility',
+					visibility: false
+				}]
+			}, {
+				type: 'actions',
+				time: 2.0,
+				actions: [{
+					target: 'creep-two',
+					type: 'move-x',
+					to: { x: 20 }
+				}, {
+					target: 'creep-two',
+					type: 'flip-x',
+					flipX: true
+				}, {
+					target: 'creep-two',
+					type: 'anim',
+					anim: 'run'
+				}]
+			}, {
+				type: 'actions',
+				time: 0,
+				actions: [{
+					target: 'creep-two',
+					type: 'visibility',
+					visibility: false
+				}]
+			}, {
+				type: 'callback',
+				callback: () -> {
+					GlobalState.instance.creepsAreInBack = true;
+					return -1;
+				}
+			}];
+			case 'creep-two-thought-win': return [{
+				type: 'text',
+				text: 'kid\'s weirding me out'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'let\'s get out of here'
+			}, {
+				type: 'actions',
+				time: 0.8,
+				actions: [{
+					target: 'creep-two',
+					type: 'anim',
+					anim: 'run'
+				}, {
+					target: 'creep-two',
+					type: 'move-x',
+					to: { x: 160 }
+				}, {
+					target: 'creep-two',
+					type: 'flip-x',
+					flipX: false
+				}]
+			}, {
+				type: 'actions',
+				time: 0,
+				actions: [{
+					target: 'creep-two',
+					type: 'visibility',
+					visibility: false
+				}]
+			}, {
+				type: 'actions',
+				time: 1.0,
+				actions: [{
+					target: 'creep-one',
+					type: 'move-x',
+					to: { x: 160 },
+				}, {
+					target: 'creep-one',
+					type: 'anim',
+					anim: 'run'
+				}]
+			}, {
+				type: 'actions',
+				time: 0,
+				actions: [{
+					target: 'creep-one',
+					type: 'visibility',
+					visibility: false
+				}]
+			}, {
+				type: 'actions',
+				time: 2.0,
+				actions: [{
+					target: 'hellgirl',
+					type: 'flip-x',
+					flipX: true
+				}]
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'actions',
+				time: 1.5,
+				actions: [{
+					target: 'hellgirl',
+					type: 'move-x',
+					to: { x: 160 }
+				}, {
+					target: 'hellgirl',
+					type: 'anim',
+					anim: 'run'
+				}, {
+					target: 'hellgirl',
+					type: 'flip-x',
+					flipX: false
+				}]
+			}, {
+				type: 'actions',
+				time: 0,
+				actions: [{
+					target: 'hellgirl',
+					type: 'visibility',
+					visibility: false
+				}]
+			}, {
+				type: 'callback',
+				callback: () -> {
+					GlobalState.instance.creepsScaredOff = true;
+					return -1;
+				}
+			}];
 			// dialog
 			case 'chris-talk': return [{
 				type: 'callback',
@@ -588,7 +799,11 @@ class Cinematics {
 						return 4;
 					}
 
-					return 7;
+					if (gs.items.contains('tickets')) {
+						return 7;
+					}
+
+					return 10;
 				}
 			}, {
 				type: 'text',
@@ -596,6 +811,15 @@ class Cinematics {
 			}, {
 				type: 'text',
 				text: 'your friend coming with? he\'s been bothering me'
+			}, {
+				type: 'callback',
+				callback: () -> -1
+			}, {
+				type: 'text',
+				text: 'well...'
+			}, {
+				type: 'text',
+				text: 'those look like two tickets to me'
 			}, {
 				type: 'callback',
 				callback: () -> -1
@@ -619,6 +843,157 @@ class Cinematics {
 			case 'dancing-woman-talk': return [{
 				type: 'text',
 				text: 'She\'s just dancing.',
+			}];
+			case 'creep-one-talk': return [{
+				type: 'callback',
+				callback: () -> {
+					if (GlobalState.instance.currentRoom == 'cafe') {
+						return 1;
+					}
+
+					return 3;
+				}
+			}, {
+				type: 'text',
+				text: 'is she looking at me?'
+			}, {
+				type: 'callback',
+				callback: () -> -1
+			}];
+			case 'creep-two-talk': return [{
+				type: 'callback',
+				callback: () -> {
+					if (GlobalState.instance.currentRoom == 'cafe') {
+						return 1;
+					}
+
+					return 3;
+				}
+			}, {
+				type: 'text',
+				text: 'i can\'t believe that\'s her'
+			}, {
+				type: 'callback',
+				callback: () -> -1
+			}];
+			case 'hellgirl-talk': return [{
+				type: 'callback',
+				callback: () -> {
+					var gs = GlobalState.instance;
+					if (gs.currentRoom == 'cafe') {
+						if (gs.talkedToHellgirl) {
+							return 5;
+						}
+
+						return 1;
+					}
+
+					return 8;
+				}
+			}, {
+				type: 'text',
+				text: 'yes, i am DJ Hellgirl'
+			}, {
+				type: 'text',
+				text: 'or just \'j\''
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'thank you for approaching and not just ogling'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'sorry hun, gave my spare tickets to some friends'
+			}, {
+				type: 'callback',
+				callback: () -> {
+					GlobalState.instance.talkedToHellgirl = true;
+					return -1;
+				}
+			}, {
+				type: 'text',
+				text: 'i can handle myself around those creeps ya know'
+			}, {
+				type: 'text',
+				text: '... ...'
+			}, {
+				type: 'text',
+				text: 'but i appreciate you looking out for me'
+			}, {
+				type: 'text',
+				text: 'you\'re sweet'
+			}, {
+				type: 'text',
+				text: '...'
+			}, {
+				type: 'actions',
+				time: 1.0,
+				actions: [{
+					target: 'hellgirl',
+					type: 'anim',
+					anim: 'kiss'
+				}]
+			}, {
+				type: 'actions',
+				time: 1.5,
+				actions: [{
+					target: 'hellgirl',
+					type: 'anim',
+					anim: 'stand'
+				}]
+			}, {
+				type: 'actions',
+				time: 1.0,
+				actions: [{
+					target: 'hellgirl',
+					type: 'move-x',
+					to: { x: 160 }
+				}, {
+					target: 'hellgirl',
+					type: 'anim',
+					anim: 'run'
+				}]
+			}, {
+				type: 'actions',
+				time: 1.0,
+				actions: [{
+					target: 'hellgirl',
+					type: 'flip-x',
+					flipX: false
+				}, {
+					target: 'hellgirl',
+					type: 'anim',
+					anim: 'stand'
+				}]
+			}, {
+				type: 'text',
+				text: 'oh! wait!'
+			}, {
+				type: 'text',
+				text: 'take these, my friends had to cancel'
+			}, {
+				type: 'actions',
+				time: 2.0,
+				actions: [{
+					target: 'hellgirl',
+					type: 'move-x',
+					to: { x: -16 }
+				}, {
+					target: 'hellgirl',
+					type: 'anim',
+					anim: 'run'
+				}, {
+					target: 'hellgirl',
+					type: 'flip-x',
+					flipX: true
+				}]
+			}, {
+				type: 'item',
+				item: 'tickets'
 			}];
 			default: return null;
 		}

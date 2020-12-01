@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" width="30" height="8" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="10">
+ <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="192" columns="12">
+  <image source="../../images/tilesets/tiles.png" width="192" height="256"/>
+ </tileset>
+ <layer id="1" name="platforms" width="30" height="8">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,97,98,99,99,100,101,0,0,0,0,0,97,98,99,99,100,101,0,0,0,0,0,97,98,99,99,100,101,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="2" name="collision" width="30" height="8" opacity="0.19">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,26,26,26,26,0,0,0,0,0,0,0,26,26,26,26,0,0,0,0,0,0,0,26,26,26,26,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="7" name="trampolines">
+  <object id="5" name="tramp1" x="77" y="91">
+   <point/>
+  </object>
+  <object id="6" name="tramp2" x="232" y="91">
+   <point/>
+  </object>
+  <object id="9" name="tramp3" x="408" y="91">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="spikes">
+  <object id="3" name="spike1" x="211" y="91">
+   <point/>
+  </object>
+  <object id="4" name="spike2" x="255" y="91">
+   <point/>
+  </object>
+  <object id="7" name="spike3" x="387" y="91">
+   <point/>
+  </object>
+  <object id="8" name="spike4" x="431" y="90">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="3" name="start">
+  <object id="1" name="start" x="56" y="80">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="5" name="hits">
+  <object id="2" name="hit1" x="411" y="12">
+   <point/>
+  </object>
+ </objectgroup>
+</map>
