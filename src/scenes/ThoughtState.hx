@@ -59,6 +59,7 @@ class ThoughtState extends FlxState {
 		FlxG.scaleMode = new PixelPerfectScaleMode();
 
 		// camera.followLerp = 0.5;
+		camera.pixelPerfectRender = true;
 
 		var world:ThoughtWorld = ThoughtWorlds.getThoughtWorld(GlobalState.instance.currentWorld);
 
@@ -152,6 +153,7 @@ class ThoughtState extends FlxState {
 		_platformsLayer.loadMapFromArray(cast(_map.getLayer('platforms'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
 			_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 			.setPosition(0, yUpOffset);
+		_platformsLayer.useScaleHack = false;
 
 		add(_platformsLayer);
 
@@ -161,6 +163,7 @@ class ThoughtState extends FlxState {
 			.setPosition(0, yUpOffset + platformYOffset);
 		_collisionLayer.allowCollisions = FlxObject.UP;
 		_collisionLayer.visible = false;
+		_collisionLayer.useScaleHack = false;
 
 		add(_collisionLayer);
 

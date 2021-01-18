@@ -83,7 +83,7 @@ class Player extends FlxSprite {
 		animation.add('present', [10]);
 		animation.add('dead', [11]);
 
-		maxVelocity.set(100, 150);
+		maxVelocity.set(60, 150);
 
 		holds = {
 			left: 0,

@@ -84,7 +84,7 @@ class PlayState extends FlxState {
 
 		FlxG.mouse.visible = false;
 
-		// camera.pixelPerfectRender = true;
+		camera.pixelPerfectRender = true;
 		FlxG.scaleMode = new PixelPerfectScaleMode();
 
 		// camera.followLerp = 0.5;
@@ -174,6 +174,8 @@ class PlayState extends FlxState {
 		_groundBackLayer.loadMapFromArray(cast(_map.getLayer('ground-back'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
 			_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 			.setPosition(0, -yUpOffset);
+
+		_groundBackLayer.useScaleHack = false;
 		add(_groundBackLayer);
 
 		if (_map.getLayer('ground-middle') != null) {
@@ -181,6 +183,8 @@ class PlayState extends FlxState {
 			_groundMiddleLayer.loadMapFromArray(cast(_map.getLayer('ground-middle'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
 				_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 				.setPosition(0, -yUpOffset);
+
+			_groundBackLayer.useScaleHack = false;
 			add(_groundMiddleLayer);
 		}
 		
@@ -188,14 +192,17 @@ class PlayState extends FlxState {
 		_backgroundLayer.loadMapFromArray(cast(_map.getLayer('background'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
 			_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 			.setPosition(0, -yUpOffset);
+
+		_backgroundLayer.useScaleHack = false;
 		add(_backgroundLayer);
 
 		if (_map.getLayer('items') != null) {
 			var _itemsLayer = new FlxTilemap();
 			_itemsLayer.loadMapFromArray(cast(_map.getLayer('items'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
-			_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
-			.setPosition(0, -yUpOffset);
-			
+				_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
+				.setPosition(0, -yUpOffset);
+
+			_itemsLayer.useScaleHack = false;
 			add(_itemsLayer);
 		}
 		
@@ -204,6 +211,8 @@ class PlayState extends FlxState {
 			_itemsLayerAngledLeft.loadMapFromArray(cast(_map.getLayer('items-angled-left'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
 				_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 				.setPosition(0 + -xItemsOffset, 0 + yItemsOffset - yUpOffset);
+
+			_itemsLayerAngledLeft.useScaleHack = false;
 			add(_itemsLayerAngledLeft);
 		}
 
@@ -212,6 +221,8 @@ class PlayState extends FlxState {
 			_itemsLayerAngledRight.loadMapFromArray(cast(_map.getLayer('items-angled-right'), TiledTileLayer).tileArray, _map.width, _map.height, AssetPaths.tiles__png,
 				_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 				.setPosition(0 + xItemsOffset + 1, 0 + yItemsOffset - yUpOffset);
+
+			_itemsLayerAngledRight.useScaleHack = false;
 			add(_itemsLayerAngledRight);
 		}
 
@@ -225,6 +236,7 @@ class PlayState extends FlxState {
 			_map.tileWidth, _map.tileHeight, FlxTilemapAutoTiling.OFF, 1, 1, 1)
 			.setPosition(0, collisionOutdoorYOffset - yUpOffset);
 		_collisionLayer.visible = false;
+		_collisionLayer.useScaleHack = false;
 
 
 		_hardExits = [];
