@@ -120,14 +120,14 @@ class PlayState extends FlxState {
 		}});
 
 		if (FlxG.sound.defaultMusicGroup.sounds.length == 0) {
-			FlxG.sound.play(AssetPaths.crickets__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
-			FlxG.sound.play(AssetPaths.bus__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
-			FlxG.sound.play(AssetPaths.waves__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
-			FlxG.sound.play(AssetPaths.low_synth__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
-			FlxG.sound.play(AssetPaths.hi_synth__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
-			FlxG.sound.play(AssetPaths.percs_bus__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
-			FlxG.sound.play(AssetPaths.percs_cafe__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
-			FlxG.sound.play(AssetPaths.club_front__mp3, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.crickets__wav, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.bus__wav, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.waves__wav, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.low_synth__wav, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.hi_synth__wav, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.percs_bus__wav, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.percs_cafe__wav, 0, true, FlxG.sound.defaultMusicGroup, false);
+			FlxG.sound.play(AssetPaths.club_front__wav, 0, true, FlxG.sound.defaultMusicGroup, false);
 		}
 
 		// need to use integers for now, since I don't know how to

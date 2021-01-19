@@ -86,12 +86,11 @@ class ThoughtState extends FlxState {
 		_trampolineSound = FlxG.sound.load(AssetPaths.trampoline__wav, 0.5);
 
 		sound = FlxG.sound.play(world.song, 0, true);
-        FlxTween.tween(sound, { volume: 0.5 }, 0.5);
+		FlxTween.tween(sound, { volume: 0.5 }, 0.5);
 	}
 
 	override public function update(elapsed:Float) {
 		super.update(elapsed);
-
 		if (_player.y > GAME_HEIGHT + GAME_HEIGHT_DIFF && worldStatus == null) {
 			_fallSound.play();
 			loseLevel();

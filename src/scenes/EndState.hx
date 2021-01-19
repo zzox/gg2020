@@ -84,7 +84,7 @@ class EndState extends FlxState {
         }});
 
         // fade in ending song
-        sound = FlxG.sound.play(AssetPaths.ending__mp3, 0, true, FlxG.sound.defaultMusicGroup);
+        sound = FlxG.sound.play(AssetPaths.ending__wav, 0, true, FlxG.sound.defaultMusicGroup);
         FlxTween.tween(sound, { volume: 1 }, 1.5);
     }
 
